@@ -5,6 +5,10 @@ name: Data check (no trading)
 on:
   workflow_dispatch:
 
+env:
+  PYTHONUNBUFFERED: "1"       # show progress lines live in the log
+  PYTHONWARNINGS: "ignore"     # hide noisy library deprecation warnings
+
 permissions:
   contents: read
 

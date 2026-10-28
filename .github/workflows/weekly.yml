@@ -7,6 +7,10 @@ on:
     - cron: "17 12 * * 6"     # Saturdays 12:17 UTC (8:17 am Eastern time)
   workflow_dispatch:           # adds a "Run workflow" button for manual runs
 
+env:
+  PYTHONUNBUFFERED: "1"       # show progress lines live in the log
+  PYTHONWARNINGS: "ignore"     # hide noisy library deprecation warnings
+
 permissions:
   contents: write              # needed to save the results back
 
