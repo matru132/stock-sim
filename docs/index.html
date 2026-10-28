@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analyst Picks Experiment</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f6f5f2;
+  --surface: #fcfcfb;
+  --border: #e4e2dc;
+  --grid: #ecebe6;
+  --text: #0b0b0b;
+  --text-2: #52514e;
+  --muted: #8a8984;
+  --s1: #2a78d6;   /* weekly        */
+  --s2: #eb6834;   /* every 2 weeks */
+  --s3: #1baf7a;   /* every 4 weeks */
+  --bench: #6f6e69;
+  --ref: #a9a8a2;
+  --good: #0c7a0c;
+  --bad: #c03232;
+  --chip: #efeeea;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --bg: #121211; --surface: #1a1a19; --border: #2e2e2c; --grid: #262624;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e88;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --bench: #b5b4ad; --ref: #6f6e69; --good: #4cc24c; --bad: #e66767; --chip: #262624;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121211; --surface: #1a1a19; --border: #2e2e2c; --grid: #262624;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e88;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --bench: #b5b4ad; --ref: #6f6e69; --good: #4cc24c; --bad: #e66767; --chip: #262624;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+main { max-width: 1120px; margin: 0 auto; padding: 28px 16px 64px; }
+header h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+header p { margin: 0; color: var(--text-2); }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip { background: var(--chip); border-radius: 999px; padding: 3px 11px; font-size: 13px; color: var(--text-2); }
+.chip b { color: var(--text); font-weight: 600; }
+section { margin-top: 36px; }
+h2 { font-size: 18px; margin: 0 0 4px; }
+.sub { color: var(--text-2); margin: 0 0 14px; font-size: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 860px) { .grid2 { grid-template-columns: 1fr; } }
+.card h3 { margin: 0 0 2px; font-size: 15px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--text-2); margin: 6px 0 4px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend svg { flex: none; }
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tip {
+  position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 12.5px; box-shadow: 0 4px 16px rgb(0 0 0 / .12);
+  min-width: 180px; display: none; z-index: 2;
+}
+.tip .d { color: var(--muted); margin-bottom: 4px; }
+.tip .r { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+.tip .r b { font-weight: 600; min-width: 54px; }
+.tip .r em { font-style: normal; color: var(--text-2); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-weight: 600; color: var(--text-2); font-size: 12.5px; border-bottom: 1px solid var(--border); padding: 8px 10px; white-space: nowrap; }
+td { border-bottom: 1px solid var(--grid); padding: 8px 10px; }
+td.n, th.n { text-align: right; }
+tr.group td { font-weight: 600; color: var(--text-2); background: transparent; padding-top: 14px; font-size: 13px; }
+tbody tr:hover td { background: var(--chip); }
+.scroll { overflow-x: auto; }
+#board td:first-child, #holdings td:first-child, #ranking td:nth-child(2) { white-space: nowrap; }
+.pos { color: var(--good); } .neg { color: var(--bad); }
+.key { display: inline-block; width: 14px; height: 0; border-top: 2.5px solid; vertical-align: middle; margin-right: 8px; }
+.key.dash { border-top-style: dashed; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+select, button {
+  font: inherit; font-size: 14px; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px;
+}
+button { cursor: pointer; }
+button[aria-pressed="true"] { background: var(--text); color: var(--surface); border-color: var(--text); }
+.flag { font-size: 12px; color: var(--bad); white-space: nowrap; }
+.empty { color: var(--muted); padding: 24px; text-align: center; }
+details summary { cursor: pointer; color: var(--text-2); font-size: 13px; margin-top: 10px; }
+.note { font-size: 13px; color: var(--muted); margin-top: 28px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Analyst Picks — Paper Trading Experiment</h1>
+    <p>Seven hypothetical $100,000 CAD portfolios following analyst buy ratings. No real money.</p>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <section>
+    <h2>Return since start</h2>
+    <p class="sub">Each line is a portfolio's gain or loss since Day 0, after currency-conversion costs. Grey dashed lines never trade.</p>
+    <div class="grid2">
+      <div class="card"><h3>US + Canada</h3><div class="legend" id="lg-mix"></div><div class="chart" id="ch-mix"></div></div>
+      <div class="card"><h3>Canada only</h3><div class="legend" id="lg-ca"></div><div class="chart" id="ch-ca"></div></div>
+    </div>
+    <details><summary>Show weekly values as a table</summary><div class="scroll" id="hist-table"></div></details>
+  </section>
+
+  <section>
+    <h2>Leaderboard</h2>
+    <p class="sub">Current value of every portfolio. "vs benchmark" compares with the 50% S&amp;P 500 / 50% TSX portfolio that never trades.</p>
+    <div class="card scroll"><table id="board"></table></div>
+  </section>
+
+  <section>
+    <h2>Holdings</h2>
+    <p class="sub">What a portfolio owns right now. A holding whose current rank is outside the top 30 will be sold at that portfolio's next rebalance.</p>
+    <div class="controls"><select id="pf-select" aria-label="Portfolio"></select><span class="chip" id="pf-info"></span></div>
+    <div class="card scroll"><table id="holdings"></table></div>
+  </section>
+
+  <section>
+    <h2>This week's ranking</h2>
+    <p class="sub">Score = 50% analyst rating + 50% upside to the average target price (capped at +50%). Rating: 1 = strong buy, 5 = sell.</p>
+    <div class="controls">
+      <button id="tab-mix" aria-pressed="true">US + Canada</button>
+      <button id="tab-ca" aria-pressed="false">Canada only</button>
+    </div>
+    <div class="card scroll"><table id="ranking"></table></div>
+  </section>
+
+  <section>
+    <h2>Recent transactions</h2>
+    <p class="sub">Trades, currency conversions and dividends for the portfolio selected above.</p>
+    <div class="card scroll"><table id="trades"></table></div>
+  </section>
+
+  <p class="note">Educational simulation only — not investment advice. Prices are Friday closing prices from Yahoo Finance; trades are assumed to happen at those prices with $0 commission and a 1.5% fee on every CAD↔USD conversion.</p>
+</main>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const COLORS = { 1: "--s1", 2: "--s2", 4: "--s3" };
+const FREQ = { 1: "Weekly", 2: "Every 2 weeks", 4: "Every 4 weeks" };
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const $ = id => document.getElementById(id);
+const money = v => v == null ? "—" : v.toLocaleString("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 });
+const pct = (v, d = 2) => v == null ? "—" : (v > 0 ? "+" : "") + (v * 100).toFixed(d) + "%";
+const fmtDate = s => new Date(s + "T12:00:00").toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" });
+const el = (tag, attrs = {}, text) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
+const svgEl = (tag, attrs = {}) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
+
+let DATA, INITIAL;
+
+fetch("data.json?" + Date.now()).then(r => r.json()).then(d => { DATA = d; INITIAL = d.settings.initial; render(); })
+  .catch(err => { console.error(err); $("meta").append(el("span", { class: "chip" }, "No data yet — the first weekly run hasn't happened.")); });
+
+function render() {
+  const m = $("meta");
+  [["Data as of", fmtDate(DATA.as_of)], ["Week", DATA.week], ["Started", fmtDate(DATA.start_date)], ["USD → CAD", DATA.fx.toFixed(4)]]
+    .forEach(([k, v]) => { const c = el("span", { class: "chip" }, k + " "); c.append(el("b", {}, String(v))); m.append(c); });
+
+  const P = Object.fromEntries(DATA.portfolios.map(p => [p.id, p]));
+  const seriesFor = (prefix, benchIds) => [
+    ...[1, 2, 4].map(w => ({ p: P[`${prefix}-${w}W`], color: css(COLORS[w]), label: FREQ[w], dash: false })),
+    ...benchIds.map(id => ({ p: P[id], color: css(id === "BENCH" ? "--bench" : "--ref"), label: P[id].name.replace(/^(Benchmark|Reference) · /, ""), dash: true })),
+  ];
+  const mix = seriesFor("MIX", ["BENCH", "REF-SPX"]);
+  const ca = seriesFor("CA", ["REF-TSX"]);
+  legend($("lg-mix"), mix); legend($("lg-ca"), ca);
+  lineChart($("ch-mix"), mix); lineChart($("ch-ca"), ca);
+  window.addEventListener("resize", () => { lineChart($("ch-mix"), mix); lineChart($("ch-ca"), ca); });
+
+  histTable(); board(P); holdingsSection(); rankingSection("mix");
+  $("tab-mix").onclick = () => rankingSection("mix");
+  $("tab-ca").onclick = () => rankingSection("ca");
+}
+
+function legend(box, series) {
+  box.textContent = "";
+  series.forEach(s => {
+    const sp = el("span");
+    const k = svgEl("svg", { width: 16, height: 6 });
+    k.append(svgEl("line", { x1: 0, y1: 3, x2: 16, y2: 3, stroke: s.color, "stroke-width": 2.5, "stroke-dasharray": s.dash ? "4 3" : "" }));
+    sp.append(k, document.createTextNode(s.label));
+    box.append(sp);
+  });
+}
+
+function lineChart(box, series) {
+  box.textContent = "";
+  const W = Math.max(box.clientWidth, 280), H = 260, m = { t: 10, r: 14, b: 26, l: 46 };
+  const dates = series[0].p.history.map(h => h[0]);
+  const ret = s => s.p.history.map(h => h[1] / INITIAL - 1);
+  const all = series.flatMap(ret).concat([0]);
+  let lo = Math.min(...all), hi = Math.max(...all);
+  const pad = Math.max((hi - lo) * 0.12, 0.005); lo -= pad; hi += pad;
+  const step = niceStep((hi - lo) / 5);
+  lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+  const n = dates.length;
+  const x = i => n === 1 ? (m.l + W - m.r) / 2 : m.l + i * (W - m.l - m.r) / (n - 1);
+  const y = v => m.t + (hi - v) / (hi - lo) * (H - m.t - m.b);
+
+  const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Return since start" });
+  for (let v = lo; v <= hi + 1e-9; v += step) {
+    const isZero = Math.abs(v) < 1e-9;
+    svg.append(svgEl("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: isZero ? css("--muted") : css("--grid"), "stroke-width": 1 }));
+    const t = svgEl("text", { x: m.l - 8, y: y(v) + 4, "text-anchor": "end", "font-size": 11, fill: css("--muted") });
+    t.textContent = (v > 0 ? "+" : "") + (v * 100).toFixed(step < 0.01 ? 1 : 0) + "%"; svg.append(t);
+  }
+  const ticks = Math.min(n, Math.max(2, Math.floor((W - m.l - m.r) / 90)));
+  const seen = new Set();
+  for (let k = 0; k < ticks; k++) {
+    const i = n === 1 ? 0 : Math.round(k * (n - 1) / (ticks - 1));
+    if (seen.has(i)) continue; seen.add(i);
+    const t = svgEl("text", { x: x(i), y: H - 6, "text-anchor": n === 1 ? "middle" : (k === 0 ? "start" : k === ticks - 1 ? "end" : "middle"), "font-size": 11, fill: css("--muted") });
+    t.textContent = new Date(dates[i] + "T12:00:00").toLocaleDateString("en-CA", { month: "short", day: "numeric" }); svg.append(t);
+  }
+  // draw benchmarks first so strategies sit on top
+  [...series].reverse().forEach(s => {
+    const r = ret(s);
+    if (n > 1) svg.append(svgEl("path", { d: r.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1)).join(""), fill: "none", stroke: s.color, "stroke-width": 2, "stroke-dasharray": s.dash ? "5 4" : "", "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    svg.append(svgEl("circle", { cx: x(n - 1), cy: y(r[n - 1]), r: 3.5, fill: s.color, stroke: css("--surface"), "stroke-width": 2 }));
+  });
+  const cross = svgEl("line", { y1: m.t, y2: H - m.b, stroke: css("--muted"), "stroke-width": 1, visibility: "hidden" });
+  svg.append(cross);
+  const hit = svgEl("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: "transparent", tabindex: 0 });
+  svg.append(hit);
+  box.append(svg);
+
+  const tip = $("tip");
+  const show = i => {
+    cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("visibility", "visible");
+    tip.textContent = "";
+    tip.append(el("div", { class: "d" }, fmtDate(dates[i])));
+    series.map(s => ({ s, v: s.p.history[i][1] })).sort((a, b) => b.v - a.v).forEach(({ s, v }) => {
+      const row = el("div", { class: "r" });
+      const k = el("span", { class: "key" + (s.dash ? " dash" : "") }); k.style.borderTopColor = s.color;
+      row.append(k, el("b", {}, pct(v / INITIAL - 1)), el("em", {}, s.label + " · " + money(v)));
+      tip.append(row);
+    });
+    const br = box.getBoundingClientRect();
+    tip.style.display = "block";
+    const px = br.left + window.scrollX + x(i) * br.width / W;
+    tip.style.left = Math.min(px + 14, window.scrollX + document.documentElement.clientWidth - tip.offsetWidth - 8) + "px";
+    tip.style.top = (br.top + window.scrollY + 8) + "px";
+  };
+  const hide = () => { cross.setAttribute("visibility", "hidden"); tip.style.display = "none"; };
+  hit.addEventListener("pointermove", e => {
+    const r = svg.getBoundingClientRect(); const mx = (e.clientX - r.left) * W / r.width;
+    show(n === 1 ? 0 : Math.max(0, Math.min(n - 1, Math.round((mx - m.l) / ((W - m.l - m.r) / (n - 1))))));
+  });
+  hit.addEventListener("pointerleave", hide);
+  hit.addEventListener("focus", () => show(n - 1)); hit.addEventListener("blur", hide);
+}
+function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))); const f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p; }
+
+function table(t, head, rows) {
+  t.textContent = "";
+  const tr = el("tr"); head.forEach(([h, n]) => tr.append(el("th", n ? { class: "n" } : {}, h)));
+  const thead = el("thead"); thead.append(tr); t.append(thead);
+  const tb = el("tbody"); rows.forEach(r => tb.append(r)); t.append(tb);
+  if (!rows.length) { const e = el("tr"); const td = el("td", { class: "empty", colspan: head.length }, "Nothing yet."); e.append(td); tb.append(e); }
+}
+function cell(text, cls) { return el("td", cls ? { class: cls } : {}, text); }
+function signed(v, d) { return cell(pct(v, d), "n " + (v > 0 ? "pos" : v < 0 ? "neg" : "")); }
+
+function histTable() {
+  const ps = DATA.portfolios, t = el("table");
+  const dates = ps[0].history.map(h => h[0]);
+  table(t, [["Week of"], ...ps.map(p => [p.id, true])], dates.map((d, i) => {
+    const r = el("tr"); r.append(cell(fmtDate(d))); ps.forEach(p => r.append(cell(money(p.history[i] ? p.history[i][1] : null), "n"))); return r;
+  }));
+  $("hist-table").append(t);
+}
+
+function board(P) {
+  const bench = P["BENCH"].return_pct;
+  const groups = [["US + Canada", ["MIX-1W", "MIX-2W", "MIX-4W"]], ["Canada only", ["CA-1W", "CA-2W", "CA-4W"]], ["Never trade", ["BENCH", "REF-SPX", "REF-TSX"]]];
+  const rows = [];
+  groups.forEach(([g, ids]) => {
+    const gr = el("tr", { class: "group" }); gr.append(el("td", { colspan: 8 }, g)); rows.push(gr);
+    ids.forEach(id => {
+      const p = P[id], r = el("tr");
+      const nameTd = el("td"); const k = el("span", { class: "key" + (p.kind === "benchmark" ? " dash" : "") });
+      k.style.borderTopColor = css(p.kind === "benchmark" ? (id === "BENCH" ? "--bench" : "--ref") : COLORS[p.every_weeks]);
+      nameTd.append(k, document.createTextNode(p.name.replace(/^(Benchmark|Reference) · /, "")));
+      r.append(nameTd, cell(money(p.value), "n"), signed(p.return_pct), id === "BENCH" ? cell("—", "n") : signed(p.return_pct - bench),
+        cell(money(p.fx_fees), "n"), cell(String(p.n_trades), "n"), cell(money(p.cash_cad + p.cash_usd * DATA.fx), "n"),
+        cell(p.next_rebalance ? fmtDate(p.next_rebalance) : "Never", "n"));
+      rows.push(r);
+    });
+  });
+  table($("board"), [["Portfolio"], ["Value", 1], ["Return", 1], ["vs benchmark", 1], ["FX fees paid", 1], ["Trades", 1], ["Cash", 1], ["Next rebalance", 1]], rows);
+}
+
+function holdingsSection() {
+  const s = $("pf-select");
+  DATA.portfolios.forEach(p => s.append(el("option", { value: p.id }, p.name)));
+  const draw = () => {
+    const p = DATA.portfolios.find(q => q.id === s.value);
+    $("pf-info").textContent = `${p.holdings.length} holdings · last rebalance ${p.last_rebalance ? fmtDate(p.last_rebalance) : "—"}`;
+    table($("holdings"), [["Ticker"], ["Company"], ["Value", 1], ["Weight", 1], ["Gain", 1], ["Rank now", 1]],
+      p.holdings.map(h => {
+        const r = el("tr"); const rk = el("td", { class: "n" });
+        if (p.kind === "benchmark") rk.textContent = "—";
+        else if (h.rank && h.rank <= DATA.settings.n_hold) rk.textContent = "#" + h.rank;
+        else rk.append(el("span", { class: "flag" }, h.rank ? `#${h.rank} · to sell` : "unranked · to sell"));
+        r.append(cell(h.ticker), cell(h.name), cell(money(h.value_cad), "n"), cell((h.weight * 100).toFixed(1) + "%", "n"), signed(h.gain_pct, 1), rk);
+        return r;
+      }));
+    const tr = DATA.recent_trades.filter(t => t.portfolio === p.id).slice(-60).reverse();
+    table($("trades"), [["Date"], ["Action"], ["Ticker"], ["Shares", 1], ["Price", 1], ["Value (CAD)", 1], ["Fee (CAD)", 1]],
+      tr.map(t => { const r = el("tr");
+        r.append(cell(fmtDate(t.date)), cell(t.action), cell(t.ticker || "—"), cell(Number(t.shares).toFixed(3), "n"),
+          cell(Number(t.price).toFixed(t.action.startsWith("FX") ? 4 : 2) + " " + t.currency, "n"),
+          cell(t.action === "DIVIDEND" ? money(t.shares * t.price * (t.currency === "USD" ? DATA.fx : 1)) : money(t.value_cad), "n"),
+          cell(t.fee_cad ? money(t.fee_cad) : "—", "n")); return r; }));
+  };
+  s.onchange = draw; draw();
+}
+
+function rankingSection(which) {
+  $("tab-mix").setAttribute("aria-pressed", which === "mix"); $("tab-ca").setAttribute("aria-pressed", which === "ca");
+  const list = which === "mix" ? DATA.top_mix : DATA.top_ca;
+  table($("ranking"), [["#", 1], ["Ticker"], ["Company"], ["Market"], ["Rating", 1], ["Analysts", 1], ["Upside", 1], ["Score", 1]],
+    list.map((s, i) => { const r = el("tr");
+      if (i < DATA.settings.n_hold) r.style.fontWeight = "600";
+      r.append(cell(String(i + 1), "n"), cell(s.ticker), cell(s.name), cell(s.market), cell(s.rec_mean.toFixed(2), "n"),
+        cell(String(s.n_analysts), "n"), signed(s.upside, 1), cell(s.score.toFixed(3), "n")); return r; }));
+}
+</script>
+</body>
+</html>

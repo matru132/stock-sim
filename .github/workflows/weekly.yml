@@ -1,0 +1,48 @@
+# Runs the simulation every Saturday morning, using Friday's closing prices,
+# then saves the updated data and dashboard back into the repository.
+name: Weekly simulation run
+
+on:
+  schedule:
+    - cron: "17 12 * * 6"     # Saturdays 12:17 UTC (8:17 am Eastern time)
+  workflow_dispatch:           # adds a "Run workflow" button for manual runs
+
+permissions:
+  contents: write              # needed to save the results back
+
+concurrency:
+  group: weekly-sim            # never two runs at the same time
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install libraries
+        run: pip install -r requirements.txt
+
+      - name: Self-test on fake data
+        run: python -m tests.test_simulation
+
+      - name: Run this week's simulation
+        run: python -m sim.run_weekly
+
+      - name: Save results
+        run: |
+          git config user.name "weekly-sim-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data docs
+          if git diff --cached --quiet; then
+            echo "No changes to save."
+          else
+            git commit -m "Weekly run: $(date -u +%Y-%m-%d)"
+            git push
+          fi
