@@ -23,6 +23,8 @@ def main(provider=None, today=None):
     uni = prov.get_universe()
     n_us, n_ca = int((uni["market"] == "US").sum()), int((uni["market"] == "CA").sum())
     print(f"\n[check] Universe: {n_us} US + {n_ca} Canadian tickers")
+    for mkt in ("US", "CA"):
+        print(f"        {mkt} sample: {list(uni[uni['market'] == mkt]['ticker'].head(12))}")
 
     tickers = sorted(set(uni["ticker"]) | set(BENCH_TICKERS) | {C.FX_TICKER})
     closes, _ = prov.get_prices(tickers, (today - timedelta(days=10)).date(), (today + timedelta(days=1)).date())

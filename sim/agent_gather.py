@@ -31,8 +31,16 @@ def _find_symbol_column(tables, min_rows):
             continue
         for col in t.columns:
             if str(col).strip().lower() in ("symbol", "ticker", "ticker symbol"):
-                return t[col].astype(str)
+                return clean_symbols(t[col])
     raise ValueError("No ticker column found")
+
+
+def clean_symbols(col):
+    """Drop blank cells and anything that doesn't look like a ticker
+    (pandas 3 keeps blank cells as NaN even after astype(str))."""
+    s = col.dropna().map(lambda v: str(v).strip())
+    s = s[s.str.fullmatch(r"(TSX:\s*)?[A-Z0-9][A-Z0-9.\-]*")]      # real tickers are upper-case
+    return s.drop_duplicates().reset_index(drop=True)
 
 
 def to_yahoo_us(sym):

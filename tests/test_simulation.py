@@ -146,6 +146,16 @@ def test_bad_data_week_does_not_trade():
     assert Path("data/state.json").read_text() == before
 
 
+def test_ticker_cleanup():
+    """Blank cells and footnote junk in the Wikipedia tables must not crash the run."""
+    from sim.agent_gather import clean_symbols, to_yahoo_ca, to_yahoo_us
+    col = pd.Series(["RY", None, float("nan"), " TD ", "RCI.B", "TSX:BN", "Notes", "RY", "[a]"])
+    ca = list(clean_symbols(col).map(to_yahoo_ca))
+    assert ca == ["RY.TO", "TD.TO", "RCI-B.TO", "BN.TO"], ca
+    us = list(clean_symbols(pd.Series(["BRK.B", "AAPL", None])).map(to_yahoo_us))
+    assert us == ["BRK-B", "AAPL"], us
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):
