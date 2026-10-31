@@ -1,0 +1,1886 @@
+{
+ "start_date": "2026-10-30",
+ "portfolios": [
+  {
+   "id": "MIX-1W",
+   "name": "US + Canada \u00b7 weekly",
+   "universe": "mix",
+   "every_weeks": 1,
+   "kind": "strategy",
+   "cash": {
+    "CAD": 0.001062319297943759,
+    "USD": 4.547473508864641e-13
+   },
+   "positions": {
+    "WYNN": {
+     "shares": 31.600789109418315,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "AVGO": {
+     "shares": 7.235387413486193,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "FLEX": {
+     "shares": 27.281625104672916,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "SKE.TO": {
+     "shares": 88.18366173775372,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "NVDA": {
+     "shares": 11.52910006680767,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "GMIN.TO": {
+     "shares": 87.18183867335709,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "MRVL": {
+     "shares": 12.012806028284453,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "EQX.TO": {
+     "shares": 243.53006747660245,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "MPWR": {
+     "shares": 1.947224004957609,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "TTWO": {
+     "shares": 12.40634723327243,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "MU": {
+     "shares": 2.666676149689713,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "LRCX": {
+     "shares": 9.867069652512802,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "DML.TO": {
+     "shares": 1074.8640171050658,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "TXG.TO": {
+     "shares": 52.19602019996508,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "Q": {
+     "shares": 20.222122805027258,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "VST": {
+     "shares": 17.050770498593863,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "AMAT": {
+     "shares": 6.04813005404812,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "WSP.TO": {
+     "shares": 17.69157401442783,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "AYA.TO": {
+     "shares": 102.70253193462491,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "ANET": {
+     "shares": 13.972018370880459,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "TKO.TO": {
+     "shares": 320.3720776360692,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "HWM": {
+     "shares": 11.842761852114352,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "WPM.TO": {
+     "shares": 20.31541346766096,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "STX": {
+     "shares": 3.6602360732288544,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "UAL": {
+     "shares": 22.633490780747028,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "GOOGL": {
+     "shares": 8.430942901335593,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "VRT": {
+     "shares": 10.147591529611688,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "GOOG": {
+     "shares": 8.480033859115498,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "HBM.TO": {
+     "shares": 108.44010606849633,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "NRG": {
+     "shares": 24.560848330186612,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    }
+   },
+   "fees": {
+    "fx": 1005.0251149515641,
+    "commission": 0.0
+   },
+   "n_trades": 30,
+   "last_rebalance": "2026-10-30"
+  },
+  {
+   "id": "MIX-2W",
+   "name": "US + Canada \u00b7 every 2 weeks",
+   "universe": "mix",
+   "every_weeks": 2,
+   "kind": "strategy",
+   "cash": {
+    "CAD": 0.001062319297943759,
+    "USD": 4.547473508864641e-13
+   },
+   "positions": {
+    "WYNN": {
+     "shares": 31.600789109418315,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "AVGO": {
+     "shares": 7.235387413486193,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "FLEX": {
+     "shares": 27.281625104672916,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "SKE.TO": {
+     "shares": 88.18366173775372,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "NVDA": {
+     "shares": 11.52910006680767,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "GMIN.TO": {
+     "shares": 87.18183867335709,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "MRVL": {
+     "shares": 12.012806028284453,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "EQX.TO": {
+     "shares": 243.53006747660245,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "MPWR": {
+     "shares": 1.947224004957609,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "TTWO": {
+     "shares": 12.40634723327243,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "MU": {
+     "shares": 2.666676149689713,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "LRCX": {
+     "shares": 9.867069652512802,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "DML.TO": {
+     "shares": 1074.8640171050658,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "TXG.TO": {
+     "shares": 52.19602019996508,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "Q": {
+     "shares": 20.222122805027258,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "VST": {
+     "shares": 17.050770498593863,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "AMAT": {
+     "shares": 6.04813005404812,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "WSP.TO": {
+     "shares": 17.69157401442783,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "AYA.TO": {
+     "shares": 102.70253193462491,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "ANET": {
+     "shares": 13.972018370880459,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "TKO.TO": {
+     "shares": 320.3720776360692,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "HWM": {
+     "shares": 11.842761852114352,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "WPM.TO": {
+     "shares": 20.31541346766096,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "STX": {
+     "shares": 3.6602360732288544,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "UAL": {
+     "shares": 22.633490780747028,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "GOOGL": {
+     "shares": 8.430942901335593,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "VRT": {
+     "shares": 10.147591529611688,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "GOOG": {
+     "shares": 8.480033859115498,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "HBM.TO": {
+     "shares": 108.44010606849633,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "NRG": {
+     "shares": 24.560848330186612,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    }
+   },
+   "fees": {
+    "fx": 1005.0251149515641,
+    "commission": 0.0
+   },
+   "n_trades": 30,
+   "last_rebalance": "2026-10-30"
+  },
+  {
+   "id": "MIX-4W",
+   "name": "US + Canada \u00b7 every 4 weeks",
+   "universe": "mix",
+   "every_weeks": 4,
+   "kind": "strategy",
+   "cash": {
+    "CAD": 0.001062319297943759,
+    "USD": 4.547473508864641e-13
+   },
+   "positions": {
+    "WYNN": {
+     "shares": 31.600789109418315,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "AVGO": {
+     "shares": 7.235387413486193,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "FLEX": {
+     "shares": 27.281625104672916,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "SKE.TO": {
+     "shares": 88.18366173775372,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "NVDA": {
+     "shares": 11.52910006680767,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "GMIN.TO": {
+     "shares": 87.18183867335709,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "MRVL": {
+     "shares": 12.012806028284453,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "EQX.TO": {
+     "shares": 243.53006747660245,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "MPWR": {
+     "shares": 1.947224004957609,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "TTWO": {
+     "shares": 12.40634723327243,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "MU": {
+     "shares": 2.666676149689713,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "LRCX": {
+     "shares": 9.867069652512802,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "DML.TO": {
+     "shares": 1074.8640171050658,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "TXG.TO": {
+     "shares": 52.19602019996508,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "Q": {
+     "shares": 20.222122805027258,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "VST": {
+     "shares": 17.050770498593863,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "AMAT": {
+     "shares": 6.04813005404812,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "WSP.TO": {
+     "shares": 17.69157401442783,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "AYA.TO": {
+     "shares": 102.70253193462491,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "ANET": {
+     "shares": 13.972018370880459,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "TKO.TO": {
+     "shares": 320.3720776360692,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "HWM": {
+     "shares": 11.842761852114352,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "WPM.TO": {
+     "shares": 20.31541346766096,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "STX": {
+     "shares": 3.6602360732288544,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "UAL": {
+     "shares": 22.633490780747028,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "GOOGL": {
+     "shares": 8.430942901335593,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "VRT": {
+     "shares": 10.147591529611688,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "GOOG": {
+     "shares": 8.480033859115498,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    },
+    "HBM.TO": {
+     "shares": 108.44010606849633,
+     "ccy": "CAD",
+     "cost_cad": 3299.8324607576374
+    },
+    "NRG": {
+     "shares": 24.560848330186612,
+     "ccy": "USD",
+     "cost_cad": 3299.8324607576374
+    }
+   },
+   "fees": {
+    "fx": 1005.0251149515641,
+    "commission": 0.0
+   },
+   "n_trades": 30,
+   "last_rebalance": "2026-10-30"
+  },
+  {
+   "id": "CA-1W",
+   "name": "Canada only \u00b7 weekly",
+   "universe": "ca",
+   "every_weeks": 1,
+   "kind": "strategy",
+   "cash": {
+    "CAD": 2.8194335754960775e-11,
+    "USD": 0.0
+   },
+   "positions": {
+    "SKE.TO": {
+     "shares": 89.07892828545491,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "GMIN.TO": {
+     "shares": 88.06693441777573,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EQX.TO": {
+     "shares": 246.00245656177776,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "DML.TO": {
+     "shares": 1085.7763536862296,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "TXG.TO": {
+     "shares": 52.72592959460023,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "WSP.TO": {
+     "shares": 17.87118409274822,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "AYA.TO": {
+     "shares": 103.74519833555887,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "TKO.TO": {
+     "shares": 323.6245894763924,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "WPM.TO": {
+     "shares": 20.521661538130097,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "HBM.TO": {
+     "shares": 109.54102201459305,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "AGI.TO": {
+     "shares": 86.96407967903333,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "VNP.TO": {
+     "shares": 128.551226151277,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EFX.TO": {
+     "shares": 100.85728926721146,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "MAU.TO": {
+     "shares": 227.53129147642545,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "BYD.TO": {
+     "shares": 28.426857177272854,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "BDGI.TO": {
+     "shares": 39.881948555962005,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "NXE.TO": {
+     "shares": 288.8503764603207,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "CCO.TO": {
+     "shares": 30.978934763972457,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "KNT.TO": {
+     "shares": 132.53810671541189,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EIF.TO": {
+     "shares": 29.935638787709863,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EFN.TO": {
+     "shares": 152.4855096186443,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "OGC.TO": {
+     "shares": 98.9707037746399,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "SIA.TO": {
+     "shares": 169.46280225746557,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "TFII.TO": {
+     "shares": 25.63116689821776,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "SII.TO": {
+     "shares": 23.52885844861975,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "FTT.TO": {
+     "shares": 36.00878626252936,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "MDA.TO": {
+     "shares": 87.71929824561404,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "NGEX.TO": {
+     "shares": 164.52780334037058,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "ATRL.TO": {
+     "shares": 38.611528583731186,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "IMG.TO": {
+     "shares": 154.82272303878338,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    }
+   },
+   "fees": {
+    "fx": 0.0,
+    "commission": 0.0
+   },
+   "n_trades": 30,
+   "last_rebalance": "2026-10-30"
+  },
+  {
+   "id": "CA-2W",
+   "name": "Canada only \u00b7 every 2 weeks",
+   "universe": "ca",
+   "every_weeks": 2,
+   "kind": "strategy",
+   "cash": {
+    "CAD": 2.8194335754960775e-11,
+    "USD": 0.0
+   },
+   "positions": {
+    "SKE.TO": {
+     "shares": 89.07892828545491,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "GMIN.TO": {
+     "shares": 88.06693441777573,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EQX.TO": {
+     "shares": 246.00245656177776,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "DML.TO": {
+     "shares": 1085.7763536862296,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "TXG.TO": {
+     "shares": 52.72592959460023,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "WSP.TO": {
+     "shares": 17.87118409274822,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "AYA.TO": {
+     "shares": 103.74519833555887,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "TKO.TO": {
+     "shares": 323.6245894763924,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "WPM.TO": {
+     "shares": 20.521661538130097,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "HBM.TO": {
+     "shares": 109.54102201459305,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "AGI.TO": {
+     "shares": 86.96407967903333,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "VNP.TO": {
+     "shares": 128.551226151277,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EFX.TO": {
+     "shares": 100.85728926721146,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "MAU.TO": {
+     "shares": 227.53129147642545,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "BYD.TO": {
+     "shares": 28.426857177272854,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "BDGI.TO": {
+     "shares": 39.881948555962005,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "NXE.TO": {
+     "shares": 288.8503764603207,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "CCO.TO": {
+     "shares": 30.978934763972457,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "KNT.TO": {
+     "shares": 132.53810671541189,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EIF.TO": {
+     "shares": 29.935638787709863,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EFN.TO": {
+     "shares": 152.4855096186443,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "OGC.TO": {
+     "shares": 98.9707037746399,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "SIA.TO": {
+     "shares": 169.46280225746557,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "TFII.TO": {
+     "shares": 25.63116689821776,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "SII.TO": {
+     "shares": 23.52885844861975,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "FTT.TO": {
+     "shares": 36.00878626252936,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "MDA.TO": {
+     "shares": 87.71929824561404,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "NGEX.TO": {
+     "shares": 164.52780334037058,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "ATRL.TO": {
+     "shares": 38.611528583731186,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "IMG.TO": {
+     "shares": 154.82272303878338,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    }
+   },
+   "fees": {
+    "fx": 0.0,
+    "commission": 0.0
+   },
+   "n_trades": 30,
+   "last_rebalance": "2026-10-30"
+  },
+  {
+   "id": "CA-4W",
+   "name": "Canada only \u00b7 every 4 weeks",
+   "universe": "ca",
+   "every_weeks": 4,
+   "kind": "strategy",
+   "cash": {
+    "CAD": 2.8194335754960775e-11,
+    "USD": 0.0
+   },
+   "positions": {
+    "SKE.TO": {
+     "shares": 89.07892828545491,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "GMIN.TO": {
+     "shares": 88.06693441777573,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EQX.TO": {
+     "shares": 246.00245656177776,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "DML.TO": {
+     "shares": 1085.7763536862296,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "TXG.TO": {
+     "shares": 52.72592959460023,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "WSP.TO": {
+     "shares": 17.87118409274822,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "AYA.TO": {
+     "shares": 103.74519833555887,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "TKO.TO": {
+     "shares": 323.6245894763924,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "WPM.TO": {
+     "shares": 20.521661538130097,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "HBM.TO": {
+     "shares": 109.54102201459305,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "AGI.TO": {
+     "shares": 86.96407967903333,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "VNP.TO": {
+     "shares": 128.551226151277,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EFX.TO": {
+     "shares": 100.85728926721146,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "MAU.TO": {
+     "shares": 227.53129147642545,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "BYD.TO": {
+     "shares": 28.426857177272854,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "BDGI.TO": {
+     "shares": 39.881948555962005,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "NXE.TO": {
+     "shares": 288.8503764603207,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "CCO.TO": {
+     "shares": 30.978934763972457,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "KNT.TO": {
+     "shares": 132.53810671541189,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EIF.TO": {
+     "shares": 29.935638787709863,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "EFN.TO": {
+     "shares": 152.4855096186443,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "OGC.TO": {
+     "shares": 98.9707037746399,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "SIA.TO": {
+     "shares": 169.46280225746557,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "TFII.TO": {
+     "shares": 25.63116689821776,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "SII.TO": {
+     "shares": 23.52885844861975,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "FTT.TO": {
+     "shares": 36.00878626252936,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "MDA.TO": {
+     "shares": 87.71929824561404,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "NGEX.TO": {
+     "shares": 164.52780334037058,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "ATRL.TO": {
+     "shares": 38.611528583731186,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    },
+    "IMG.TO": {
+     "shares": 154.82272303878338,
+     "ccy": "CAD",
+     "cost_cad": 3333.3333333333335
+    }
+   },
+   "fees": {
+    "fx": 0.0,
+    "commission": 0.0
+   },
+   "n_trades": 30,
+   "last_rebalance": "2026-10-30"
+  },
+  {
+   "id": "BENCH",
+   "name": "Benchmark \u00b7 50% S&P 500 + 50% TSX",
+   "weights": {
+    "SPY": 0.5,
+    "XIC.TO": 0.5
+   },
+   "reference": false,
+   "kind": "benchmark",
+   "cash": {
+    "CAD": 0.0,
+    "USD": 0.0
+   },
+   "positions": {
+    "SPY": {
+     "shares": 46.59500684298865,
+     "ccy": "USD",
+     "cost_cad": 49250.00000000001
+    },
+    "XIC.TO": {
+     "shares": 878.8890936268469,
+     "ccy": "CAD",
+     "cost_cad": 49999.99999999999
+    }
+   },
+   "fees": {
+    "fx": 750.0000000000001,
+    "commission": 0.0
+   },
+   "n_trades": 2,
+   "last_rebalance": "2026-10-30"
+  },
+  {
+   "id": "REF-SPX",
+   "name": "Reference \u00b7 S&P 500 only",
+   "weights": {
+    "SPY": 1.0
+   },
+   "reference": true,
+   "kind": "benchmark",
+   "cash": {
+    "CAD": 0.0,
+    "USD": 0.0
+   },
+   "positions": {
+    "SPY": {
+     "shares": 93.19001368597729,
+     "ccy": "USD",
+     "cost_cad": 98499.99999999999
+    }
+   },
+   "fees": {
+    "fx": 1500.0,
+    "commission": 0.0
+   },
+   "n_trades": 1,
+   "last_rebalance": "2026-10-30"
+  },
+  {
+   "id": "REF-TSX",
+   "name": "Reference \u00b7 TSX only",
+   "weights": {
+    "XIC.TO": 1.0
+   },
+   "reference": true,
+   "kind": "benchmark",
+   "cash": {
+    "CAD": 0.0,
+    "USD": 0.0
+   },
+   "positions": {
+    "XIC.TO": {
+     "shares": 1757.778187253694,
+     "ccy": "CAD",
+     "cost_cad": 100000.0
+    }
+   },
+   "fees": {
+    "fx": 0.0,
+    "commission": 0.0
+   },
+   "n_trades": 1,
+   "last_rebalance": "2026-10-30"
+  }
+ ],
+ "last_date": "2026-10-30",
+ "last_week": 0,
+ "fx": 1.3986400365829468,
+ "names": {
+  "MMM": "3M Company",
+  "AOS": "A.O. Smith Corporation",
+  "ABT": "Abbott Laboratories",
+  "ABBV": "AbbVie Inc.",
+  "ACN": "Accenture plc",
+  "ADBE": "Adobe Inc.",
+  "AMD": "Advanced Micro Devices, Inc.",
+  "AES": "The AES Corporation",
+  "AFL": "AFLAC Incorporated",
+  "A": "Agilent Technologies, Inc.",
+  "APD": "Air Products and Chemicals, Inc",
+  "ABNB": "Airbnb, Inc.",
+  "AKAM": "Akamai Technologies, Inc.",
+  "ALB": "Albemarle Corporation",
+  "ARE": "Alexandria Real Estate Equities",
+  "ALGN": "Align Technology, Inc.",
+  "ALLE": "Allegion plc",
+  "LNT": "Alliant Energy Corporation",
+  "ALL": "Allstate Corporation (The)",
+  "GOOGL": "Alphabet Inc.",
+  "GOOG": "Alphabet Inc.",
+  "MO": "Altria Group, Inc.",
+  "AMZN": "Amazon.com, Inc.",
+  "AMCR": "Amcor plc",
+  "AEE": "Ameren Corporation",
+  "AEP": "American Electric Power Company",
+  "AXP": "American Express Company",
+  "AIG": "American International Group, I",
+  "AMT": "American Tower Corporation (REI",
+  "AWK": "American Water Works Company, I",
+  "AMP": "Ameriprise Financial, Inc.",
+  "AME": "AMETEK, Inc.",
+  "AMGN": "Amgen Inc.",
+  "APH": "Amphenol Corporation",
+  "ADI": "Analog Devices, Inc.",
+  "AON": "Aon plc",
+  "APA": "APA Corporation",
+  "APO": "Apollo Global Management, Inc. ",
+  "AAPL": "Apple Inc.",
+  "AMAT": "Applied Materials, Inc.",
+  "APP": "Applovin Corporation",
+  "APTV": "Aptiv PLC",
+  "ACGL": "Arch Capital Group Ltd.",
+  "ADM": "Archer-Daniels-Midland Company",
+  "ARES": "Ares Management Corporation",
+  "ANET": "Arista Networks, Inc.",
+  "AJG": "Arthur J. Gallagher & Co.",
+  "AIZ": "Assurant, Inc.",
+  "T": "AT&T Inc.",
+  "ATO": "Atmos Energy Corporation",
+  "ADSK": "Autodesk, Inc.",
+  "ADP": "Automatic Data Processing, Inc.",
+  "AZO": "AutoZone, Inc.",
+  "AVY": "Avery Dennison Corporation",
+  "AXON": "Axon Enterprise, Inc.",
+  "BKR": "Baker Hughes Company",
+  "BALL": "Ball Corporation",
+  "BAC": "Bank of America Corporation",
+  "BAX": "Baxter International Inc.",
+  "BDX": "Becton, Dickinson and Company",
+  "BRK-B": "Berkshire Hathaway Inc. New",
+  "BBY": "Best Buy Co., Inc.",
+  "TECH": "Bio-Techne Corp",
+  "BIIB": "Biogen Inc.",
+  "BLK": "BlackRock, Inc.",
+  "BX": "Blackstone Inc.",
+  "XYZ": "Block, Inc.",
+  "BE": "Bloom Energy Corporation",
+  "BNY": "The Bank of New York Mellon Cor",
+  "BA": "Boeing Company (The)",
+  "BKNG": "Booking Holdings Inc. Common St",
+  "BSX": "Boston Scientific Corporation",
+  "BMY": "Bristol-Myers Squibb Company",
+  "AVGO": "Broadcom Inc.",
+  "BR": "Broadridge Financial Solutions,",
+  "BRO": "Brown & Brown, Inc.",
+  "BF-B": "Brown Forman Inc",
+  "BG": "Bunge Limited",
+  "BXP": "BXP, Inc.",
+  "CHRW": "C.H. Robinson Worldwide, Inc.",
+  "CDNS": "Cadence Design Systems, Inc.",
+  "CPT": "Camden Property Trust",
+  "COF": "Capital One Financial Corporati",
+  "CAH": "Cardinal Health, Inc.",
+  "CCL": "Carnival Corporation Ltd.",
+  "CARR": "Carrier Global Corporation",
+  "CVNA": "Carvana Co.",
+  "CASY": "Caseys General Stores, Inc.",
+  "CAT": "Caterpillar, Inc.",
+  "CBOE": "Cboe Global Markets, Inc.",
+  "CBRE": "CBRE Group Inc",
+  "CDW": "CDW Corporation",
+  "COR": "Cencora, Inc.",
+  "CNC": "Centene Corporation",
+  "CNP": "CenterPoint Energy, Inc (Holdin",
+  "CF": "CF Industries Holdings, Inc.",
+  "CRL": "Charles River Laboratories Inte",
+  "SCHW": "Charles Schwab Corporation (The",
+  "CHTR": "Charter Communications, Inc.",
+  "CVX": "Chevron Corporation",
+  "CMG": "Chipotle Mexican Grill, Inc.",
+  "CB": "Chubb Limited",
+  "CHD": "Church & Dwight Company, Inc.",
+  "CIEN": "Ciena Corporation",
+  "CI": "The Cigna Group",
+  "CINF": "Cincinnati Financial Corporatio",
+  "CTAS": "Cintas Corporation",
+  "CSCO": "Cisco Systems, Inc.",
+  "C": "Citigroup, Inc.",
+  "CFG": "Citizens Financial Group, Inc.",
+  "CLX": "Clorox Company (The)",
+  "CME": "CME Group Inc.",
+  "CMS": "CMS Energy Corporation",
+  "KO": "Coca-Cola Company (The)",
+  "CTSH": "Cognizant Technology Solutions ",
+  "COHR": "Coherent Corp.",
+  "COIN": "Coinbase Global, Inc.",
+  "CL": "Colgate-Palmolive Company",
+  "CMCSA": "Comcast Corporation",
+  "FIX": "Comfort Systems USA, Inc.",
+  "COP": "ConocoPhillips",
+  "ED": "Consolidated Edison, Inc.",
+  "STZ": "Constellation Brands, Inc.",
+  "CEG": "Constellation Energy Corporatio",
+  "COO": "The Cooper Companies, Inc.",
+  "CPRT": "Copart, Inc.",
+  "GLW": "Corning Incorporated",
+  "CPAY": "Corpay, Inc.",
+  "CSGP": "CoStar Group, Inc.",
+  "COST": "Costco Wholesale Corporation",
+  "CRH": "CRH PLC",
+  "CRWD": "CrowdStrike Holdings, Inc.",
+  "CCI": "Crown Castle Inc.",
+  "CSX": "CSX Corporation",
+  "CMI": "Cummins Inc.",
+  "CVS": "CVS Health Corporation",
+  "DHR": "Danaher Corporation",
+  "DRI": "Darden Restaurants, Inc.",
+  "DDOG": "Datadog, Inc.",
+  "DVA": "DaVita Inc.",
+  "DECK": "Deckers Outdoor Corporation",
+  "DE": "Deere & Company",
+  "DELL": "Dell Technologies Inc.",
+  "DAL": "Delta Air Lines, Inc.",
+  "DVN": "Devon Energy Corporation",
+  "DXCM": "DexCom, Inc.",
+  "FANG": "Diamondback Energy, Inc.",
+  "DLR": "Digital Realty Trust, Inc.",
+  "DG": "Dollar General Corporation",
+  "DLTR": "Dollar Tree, Inc.",
+  "D": "Dominion Energy, Inc.",
+  "DPZ": "Domino's Pizza Inc",
+  "DASH": "DoorDash, Inc.",
+  "DOV": "Dover Corporation",
+  "DOW": "Dow Inc.",
+  "DHI": "D.R. Horton, Inc.",
+  "DTE": "DTE Energy Company",
+  "DUK": "Duke Energy Corporation (Holdin",
+  "DD": "DuPont de Nemours, Inc.",
+  "ETN": "Eaton Corporation, PLC",
+  "EBAY": "eBay Inc.",
+  "ECHO": "EchoStar Corporation",
+  "ECL": "Ecolab Inc.",
+  "EIX": "Edison International",
+  "EW": "Edwards Lifesciences Corporatio",
+  "ELV": "Elevance Health, Inc.",
+  "EME": "EMCOR Group, Inc.",
+  "EMR": "Emerson Electric Company",
+  "ETR": "Entergy Corporation",
+  "EOG": "EOG Resources, Inc.",
+  "EQT": "EQT Corporation",
+  "EFX": "Equifax, Inc.",
+  "EQIX": "Equinix, Inc.",
+  "ERIE": "Erie Indemnity Company",
+  "ESS": "Essex Property Trust, Inc.",
+  "EL": "Estee Lauder Companies, Inc. (T",
+  "EG": "Everest Group, Ltd.",
+  "EVRG": "Evergy, Inc.",
+  "P": "Everpure, Inc.",
+  "ES": "Eversource Energy (D/B/A)",
+  "EXC": "Exelon Corporation",
+  "EXE": "Expand Energy Corporation",
+  "EXPE": "Expedia Group, Inc.",
+  "EXPD": "Expeditors International of Was",
+  "EXR": "Extra Space Storage Inc",
+  "XOM": "ExxonMobil Holdings Corporation",
+  "FFIV": "F5, Inc.",
+  "FDS": "FactSet Research Systems Inc.",
+  "FICO": "Fair Isaac Corporation",
+  "FAST": "Fastenal Company",
+  "FRT": "Federal Realty Investment Trust",
+  "FDX": "FedEx Corporation",
+  "FDXF": "FedEx Freight Holding Company, ",
+  "FERG": "Ferguson Enterprises Inc.",
+  "FIS": "Fidelity National Information S",
+  "FITB": "Fifth Third Bancorp",
+  "FSLR": "First Solar, Inc.",
+  "FE": "FirstEnergy Corp.",
+  "FISV": "Fiserv, Inc.",
+  "FLEX": "Flex Ltd.",
+  "F": "Ford Motor Company",
+  "FTNT": "Fortinet, Inc.",
+  "FTV": "Fortive Corporation",
+  "FOXA": "Fox Corporation",
+  "FOX": "Fox Corporation",
+  "BEN": "Franklin Templeton, Inc.",
+  "FCX": "Freeport-McMoRan, Inc.",
+  "GRMN": "Garmin Ltd.",
+  "IT": "Gartner, Inc.",
+  "GE": "GE Aerospace",
+  "GEHC": "GE HealthCare Technologies Inc.",
+  "GEV": "GE Vernova Inc.",
+  "GEN": "Gen Digital Inc.",
+  "GNRC": "Generac Holdlings Inc.",
+  "GD": "General Dynamics Corporation",
+  "GIS": "General Mills, Inc.",
+  "GM": "General Motors Company",
+  "GPC": "Genuine Parts Company",
+  "GILD": "Gilead Sciences, Inc.",
+  "GPN": "Global Payments Inc.",
+  "GL": "Globe Life Inc.",
+  "GDDY": "GoDaddy Inc.",
+  "GS": "Goldman Sachs Group, Inc. (The)",
+  "HAL": "Halliburton Company",
+  "HIG": "The Hartford Insurance Group, I",
+  "HAS": "Hasbro, Inc.",
+  "HCA": "HCA Healthcare, Inc.",
+  "DOC": "Healthpeak Properties, Inc.",
+  "HSIC": "Henry Schein, Inc.",
+  "HSY": "The Hershey Company",
+  "HPE": "Hewlett Packard Enterprise Comp",
+  "HLT": "Hilton Worldwide Holdings Inc.",
+  "HD": "Home Depot, Inc. (The)",
+  "HONA": "Honeywell Aerospace Inc.",
+  "HON": "Honeywell International Inc.",
+  "HRL": "Hormel Foods Corporation",
+  "HST": "Host Hotels & Resorts, Inc.",
+  "HWM": "Howmet Aerospace Inc.",
+  "HPQ": "HP Inc.",
+  "HUBB": "Hubbell Inc",
+  "HUM": "Humana Inc.",
+  "HBAN": "Huntington Bancshares Incorpora",
+  "HII": "Huntington Ingalls Industries, ",
+  "IBM": "International Business Machines",
+  "IEX": "IDEX Corporation",
+  "IDXX": "IDEXX Laboratories, Inc.",
+  "ITW": "Illinois Tool Works Inc.",
+  "ILMN": "Illumina, Inc.",
+  "INCY": "Incyte Corporation",
+  "IR": "Ingersoll Rand Inc.",
+  "PODD": "Insulet Corporation",
+  "INTC": "Intel Corporation",
+  "IBKR": "Interactive Brokers Group, Inc.",
+  "ICE": "Intercontinental Exchange Inc.",
+  "IFF": "International Flavors & Fragran",
+  "IP": "International Paper Company",
+  "INTU": "Intuit Inc.",
+  "ISRG": "Intuitive Surgical, Inc.",
+  "IVZ": "Invesco Ltd",
+  "INVH": "Invitation Homes Inc.",
+  "IQV": "IQVIA Holdings, Inc.",
+  "IRM": "Iron Mountain Incorporated (Del",
+  "JBHT": "J.B. Hunt Transport Services, I",
+  "JBL": "Jabil Inc.",
+  "JKHY": "Jack Henry & Associates, Inc.",
+  "J": "Jacobs Solutions Inc.",
+  "JNJ": "Johnson & Johnson",
+  "JCI": "Johnson Controls International ",
+  "JPM": "JP Morgan Chase & Co.",
+  "KVUE": "Kenvue Inc.",
+  "KDP": "Keurig Dr Pepper Inc.",
+  "KEY": "KeyCorp",
+  "KEYS": "Keysight Technologies Inc.",
+  "KMB": "Kimberly-Clark Corporation",
+  "KIM": "Kimco Realty Corporation (HC)",
+  "KMI": "Kinder Morgan, Inc.",
+  "KKR": "KKR & Co. Inc.",
+  "KLAC": "KLA Corporation",
+  "KHC": "The Kraft Heinz Company",
+  "KR": "Kroger Company (The)",
+  "LHX": "L3Harris Technologies, Inc.",
+  "LH": "Labcorp Holdings Inc.",
+  "LRCX": "Lam Research Corporation",
+  "LVS": "Las Vegas Sands Corp.",
+  "LDOS": "Leidos Holdings, Inc.",
+  "LEN": "Lennar Corporation",
+  "LII": "Lennox International, Inc.",
+  "LLY": "Eli Lilly and Company",
+  "LIN": "Linde plc",
+  "LYV": "Live Nation Entertainment, Inc.",
+  "LMT": "Lockheed Martin Corporation",
+  "L": "Loews Corporation",
+  "LOW": "Lowe's Companies, Inc.",
+  "LULU": "lululemon athletica inc.",
+  "LITE": "Lumentum Holdings Inc.",
+  "LYB": "LyondellBasell Industries NV",
+  "MTB": "M&T Bank Corporation",
+  "MPC": "Marathon Petroleum Corporation",
+  "MAR": "Marriott International",
+  "MRSH": "Marsh",
+  "MLM": "Martin Marietta Materials, Inc.",
+  "MRVL": "Marvell Technology, Inc.",
+  "MAS": "Masco Corporation",
+  "MA": "Mastercard Incorporated",
+  "MKC": "McCormick & Company, Incorporat",
+  "MCD": "McDonald's Corporation",
+  "MCK": "McKesson Corporation",
+  "MDT": "Medtronic plc.",
+  "MRK": "Merck & Company, Inc.",
+  "META": "Meta Platforms, Inc.",
+  "MET": "MetLife, Inc.",
+  "MTD": "Mettler-Toledo International, I",
+  "MGM": "MGM Resorts International",
+  "MCHP": "Microchip Technology Incorporat",
+  "MU": "Micron Technology, Inc.",
+  "MSFT": "Microsoft Corporation",
+  "MAA": "Mid-America Apartment Communiti",
+  "MRNA": "Moderna, Inc.",
+  "MDLZ": "Mondelez International, Inc.",
+  "MPWR": "Monolithic Power Systems, Inc.",
+  "MNST": "Monster Beverage Corporation",
+  "MCO": "Moody's Corporation",
+  "MS": "Morgan Stanley",
+  "MOS": "Mosaic Company (The)",
+  "MSI": "Motorola Solutions, Inc.",
+  "MSCI": "MSCI Inc.",
+  "NDAQ": "Nasdaq, Inc.",
+  "NTAP": "NetApp, Inc.",
+  "NFLX": "Netflix, Inc.",
+  "NEM": "Newmont Corporation",
+  "NWSA": "News Corporation",
+  "NWS": "News Corporation",
+  "NEE": "NextEra Energy, Inc.",
+  "NKE": "Nike, Inc.",
+  "NI": "NiSource Inc",
+  "NDSN": "Nordson Corporation",
+  "NSC": "Norfolk Southern Corporation",
+  "NTRS": "Northern Trust Corporation",
+  "NOC": "Northrop Grumman Corporation",
+  "NCLH": "Norwegian Cruise Line Holdings ",
+  "NRG": "NRG Energy, Inc.",
+  "NUE": "Nucor Corporation",
+  "NVDA": "NVIDIA Corporation",
+  "NVR": "NVR, Inc.",
+  "NXPI": "NXP Semiconductors N.V.",
+  "ORLY": "O'Reilly Automotive, Inc.",
+  "OXY": "Occidental Petroleum Corporatio",
+  "ODFL": "Old Dominion Freight Line, Inc.",
+  "OMC": "Omnicom Group Inc.",
+  "ON": "ON Semiconductor Corporation",
+  "OKE": "ONEOK, Inc.",
+  "ORCL": "Oracle Corporation",
+  "OTIS": "Otis Worldwide Corporation",
+  "PCAR": "PACCAR Inc.",
+  "PKG": "Packaging Corporation of Americ",
+  "PLTR": "Palantir Technologies Inc.",
+  "PANW": "Palo Alto Networks, Inc.",
+  "PH": "Parker-Hannifin Corporation",
+  "PAYX": "Paychex, Inc.",
+  "PYPL": "PayPal Holdings, Inc.",
+  "PNR": "Pentair plc.",
+  "PEP": "Pepsico, Inc.",
+  "PFE": "Pfizer, Inc.",
+  "PCG": "Pacific Gas & Electric Co.",
+  "PM": "Philip Morris International Inc",
+  "PSX": "Phillips 66",
+  "PNW": "Pinnacle West Capital Corporati",
+  "PNC": "PNC Financial Services Group, I",
+  "PPG": "PPG Industries, Inc.",
+  "PPL": "PPL Corporation",
+  "PFG": "Principal Financial Group Inc",
+  "PG": "Procter & Gamble Company (The)",
+  "PGR": "Progressive Corporation (The)",
+  "PLD": "Prologis, Inc.",
+  "PRU": "Prudential Financial, Inc.",
+  "PTC": "PTC Inc.",
+  "PEG": "Public Service Enterprise Group",
+  "PSA": "Public Storage",
+  "PHM": "PulteGroup, Inc.",
+  "Q": "Qnity Electronics, Inc.",
+  "QCOM": "QUALCOMM Incorporated",
+  "PWR": "Quanta Services, Inc.",
+  "DGX": "Quest Diagnostics Incorporated",
+  "RL": "Ralph Lauren Corporation",
+  "RJF": "Raymond James Financial, Inc.",
+  "RDDT": "Reddit, Inc.",
+  "O": "Realty Income Corporation",
+  "REG": "Regency Centers Corporation",
+  "REGN": "Regeneron Pharmaceuticals, Inc.",
+  "RF": "Regions Financial Corporation",
+  "RSG": "Republic Services, Inc.",
+  "RMD": "ResMed Inc.",
+  "RVTY": "Revvity, Inc.",
+  "HOOD": "Robinhood Markets, Inc.",
+  "ROK": "Rockwell Automation, Inc.",
+  "ROL": "Rollins, Inc.",
+  "ROP": "Roper Technologies, Inc.",
+  "ROST": "Ross Stores, Inc.",
+  "RCL": "Royal Caribbean Cruises Ltd.",
+  "RTX": "RTX Corporation",
+  "SPGI": "S&P Global Inc.",
+  "CRM": "Salesforce, Inc.",
+  "SNDK": "Sandisk Corporation",
+  "SBAC": "SBA Communications Corporation",
+  "SLB": "SLB Limited",
+  "STX": "Seagate Technology Holdings PLC",
+  "SRE": "DBA Sempra",
+  "NOW": "ServiceNow, Inc.",
+  "SHW": "Sherwin-Williams Company (The)",
+  "SPG": "Simon Property Group, Inc.",
+  "SKYD": "Skydance Corporation",
+  "SWKS": "Skyworks Solutions, Inc.",
+  "SJM": "The J.M. Smucker Company",
+  "SW": "Smurfit WestRock plc",
+  "SNA": "Snap-On Incorporated",
+  "SOLV": "Solventum Corporation",
+  "SO": "Southern Company (The)",
+  "LUV": "Southwest Airlines Company",
+  "SWK": "Stanley Black & Decker, Inc.",
+  "SBUX": "Starbucks Corporation",
+  "STT": "State Street Corporation",
+  "STLD": "Steel Dynamics, Inc.",
+  "STE": "STERIS plc (Ireland)",
+  "SYK": "Stryker Corporation",
+  "SMCI": "Super Micro Computer, Inc.",
+  "SYF": "Synchrony Financial",
+  "SNPS": "Synopsys, Inc.",
+  "SYY": "Sysco Corporation",
+  "TMUS": "T-Mobile US, Inc.",
+  "TROW": "T. Rowe Price Group, Inc.",
+  "TTWO": "Take-Two Interactive Software, ",
+  "TPR": "Tapestry, Inc.",
+  "TRGP": "Targa Resources, Inc.",
+  "TGT": "Target Corporation",
+  "TEL": "TE Connectivity plc",
+  "TDY": "Teledyne Technologies Incorpora",
+  "TER": "Teradyne, Inc.",
+  "TSLA": "Tesla, Inc.",
+  "TXN": "Texas Instruments Incorporated",
+  "TPL": "Texas Pacific Land Corporation",
+  "TXT": "Textron Inc.",
+  "TMO": "Thermo Fisher Scientific Inc",
+  "TJX": "TJX Companies, Inc. (The)",
+  "TKO": "TKO Group Holdings, Inc.",
+  "TSCO": "Tractor Supply Company",
+  "TT": "Trane Technologies plc",
+  "TDG": "Transdigm Group Incorporated",
+  "TRV": "The Travelers Companies, Inc.",
+  "TRMB": "Trimble Inc.",
+  "TFC": "Truist Financial Corporation",
+  "TWLO": "Twilio Inc.",
+  "TYL": "Tyler Technologies, Inc.",
+  "TSN": "Tyson Foods, Inc.",
+  "USB": "U.S. Bancorp",
+  "UBER": "Uber Technologies, Inc.",
+  "UDR": "UDR, Inc.",
+  "ULTA": "Ulta Beauty, Inc.",
+  "UNP": "Union Pacific Corporation",
+  "UAL": "United Airlines Holdings, Inc.",
+  "UPS": "United Parcel Service, Inc.",
+  "URI": "United Rentals, Inc.",
+  "UNH": "UnitedHealth Group Incorporated",
+  "UHS": "Universal Health Services, Inc.",
+  "VLO": "Valero Energy Corporation",
+  "VEEV": "Veeva Systems Inc.",
+  "VTR": "Ventas, Inc.",
+  "VLTO": "Veralto Corp",
+  "VRSN": "VeriSign, Inc.",
+  "VRSK": "Verisk Analytics, Inc.",
+  "VZ": "Verizon Communications Inc.",
+  "VRTX": "Vertex Pharmaceuticals Incorpor",
+  "VRT": "Vertiv Holdings, LLC",
+  "VTRS": "Viatris Inc.",
+  "VICI": "VICI Properties Inc.",
+  "V": "Visa Inc.",
+  "VST": "Vistra Corp.",
+  "VMRK": "Vivmark Residential",
+  "VMC": "Vulcan Materials Company (Holdi",
+  "VYLR": "Vylor Inc.",
+  "WRB": "W.R. Berkley Corporation",
+  "GWW": "W.W. Grainger, Inc.",
+  "WAB": "Westinghouse Air Brake Technolo",
+  "WMT": "Walmart Inc.",
+  "DIS": "Walt Disney Company (The)",
+  "WM": "Waste Management, Inc.",
+  "WAT": "Waters Corporation",
+  "WEC": "WEC Energy Group, Inc.",
+  "WFC": "Wells Fargo & Company",
+  "WELL": "Welltower Inc.",
+  "WST": "West Pharmaceutical Services, I",
+  "WDC": "Western Digital Corporation",
+  "WY": "Weyerhaeuser Company",
+  "WSM": "Williams-Sonoma, Inc.",
+  "WMB": "Williams Companies, Inc. (The)",
+  "WTW": "Willis Towers Watson Public Lim",
+  "WDAY": "Workday, Inc.",
+  "WYNN": "Wynn Resorts, Limited",
+  "XEL": "Xcel Energy Inc.",
+  "XYL": "Xylem Inc.",
+  "YUM": "Yum! Brands, Inc.",
+  "ZBRA": "Zebra Technologies Corporation",
+  "ZBH": "Zimmer Biomet Holdings, Inc.",
+  "ZTS": "Zoetis Inc.",
+  "VNP.TO": "5N PLUS INC.",
+  "ABRA.TO": "ABRASILVER RESOURCE CORP",
+  "AAV.TO": "ADVANTAGE ENERGY LTD",
+  "ARE.TO": "AECON GROUP INC",
+  "AEM.TO": "AGNICO EAGLE MINES LIMITED",
+  "AC.TO": "AIR CANADA",
+  "AGI.TO": "ALAMOS GOLD INC CLS A",
+  "AQN.TO": "ALGONQUIN POWER AND UTILITIES C",
+  "ATD.TO": "ALIMENTATION COUCHE-TARD INC",
+  "AAUC.TO": "ALLIED GOLD CORPORATION",
+  "AP-UN.TO": "ALLIED PROPERTIES REAL ESTATE I",
+  "ALA.TO": "ALTAGAS LTD.",
+  "AIF.TO": "ALTUS GROUP LIMITED",
+  "USA.TO": "AMERICAS GOLD AND SILVER CORPOR",
+  "ARX.TO": "ARC RESOURCES LTD.",
+  "ARIS.TO": "ARIS MINING CORPORATION",
+  "ATZ.TO": "ARITZIA INC",
+  "ACO-X.TO": "ATCO LTD., CL.I, NV",
+  "ATH.TO": "ATHABASCA OIL CORP",
+  "ATRL.TO": "ATKINSREALIS GROUP INC",
+  "ATS.TO": "ATS CORPORATION",
+  "ASM.TO": "AVINO SILVER AND GOLD MINES LTD",
+  "AYA.TO": "AYA GOLD AND SILVER INC",
+  "BTO.TO": "B2GOLD CORP.",
+  "BDGI.TO": "BADGER INFRASTRUCTURE SOLUTIONS",
+  "BMO.TO": "BANK OF MONTREAL",
+  "BNS.TO": "BANK OF NOVA SCOTIA",
+  "ABX.TO": "BARRICK MINING CORPORATION",
+  "BHC.TO": "BAUSCH HEALTH COMPANIES INC",
+  "BTE.TO": "BAYTEX ENERGY CORP.",
+  "BCE.TO": "BCE INC.",
+  "BIR.TO": "BIRCHCLIFF ENERGY LTD.",
+  "BDT.TO": "BIRD CONSTRUCTION INC.",
+  "BB.TO": "BLACKBERRY LIMITED",
+  "BEI-UN.TO": "BOARDWALK REAL ESTATE INVESTMEN",
+  "BBD-B.TO": "BOMBARDIER INC., CL. B, SV",
+  "BLX.TO": "BORALEX INC.",
+  "BYD.TO": "BOYD GROUP SERVICES INC",
+  "BAM.TO": "BROOKFIELD ASSET MANAGEMENT LTD",
+  "BBUC.TO": "BROOKFIELD BUSINESS CORPORATION",
+  "BN.TO": "BROOKFIELD CORPORATION",
+  "BIP-UN.TO": "BROOKFIELD INFRA PARTNERS LP UN",
+  "BEP-UN.TO": "BROOKFIELD RENEWABLE PARTNERS L",
+  "DOO.TO": "BRP INC",
+  "CAE.TO": "CAE INC",
+  "CCO.TO": "CAMECO CORP",
+  "CAR-UN.TO": "CDN APARTMENT UN",
+  "CM.TO": "CANADIAN IMPERIAL BANK OF COMME",
+  "CNR.TO": "CANADIAN NATIONAL RAILWAY CO.",
+  "CNQ.TO": "CDN NATURAL RES",
+  "CP.TO": "CANADIAN PACIFIC KANSAS CITY LI",
+  "CTC-A.TO": "CANADIAN TIRE CORPORATION, CL. ",
+  "CU.TO": "CANADIAN UTILITIES LTD., CL.A, ",
+  "CPX.TO": "CAPITAL POWER CORPORATION",
+  "CS.TO": "CAPSTONE COPPER CORP",
+  "CJT.TO": "CARGOJET INC.",
+  "CCL-B.TO": "CCL INDUSTRIES INC., CL. B, NV",
+  "CLS.TO": "CELESTICA INC",
+  "CVE.TO": "CENOVUS ENERGY INC.",
+  "CG.TO": "CENTERRA GOLD INC.",
+  "CEU.TO": "CES ENERGY SOLUTIONS CORP",
+  "GIB-A.TO": "CGI INC",
+  "CSH-UN.TO": "CHARTWELL RETIREMENT RESIDENCES",
+  "CHP-UN.TO": "CHOICE PROPERTIES REIT",
+  "CCA.TO": "COGECO COMMUNICATIONS INC",
+  "CIGI.TO": "COLLIERS INTERNATIONAL GROUP IN",
+  "CSU.TO": "CONSTELLATION SOFTWARE INC.",
+  "CRR-UN.TO": "CROMBIE REAL ESTATE INVESTMENT ",
+  "CRT-UN.TO": "CT REAL ESTATE INVESTMENT TRUST",
+  "CURA.TO": "CURALEAF HOLDINGS INC",
+  "DFY.TO": "DEFINITY FINANCIAL CORPORATION",
+  "DML.TO": "DENISON MINES CORP.",
+  "DSG.TO": "DESCARTES SYS",
+  "DSV.TO": "DISCOVERY MINING LTD",
+  "DOL.TO": "DOLLARAMA INC",
+  "DIR-UN.TO": "DREAM INDUSTRIAL REIT",
+  "DPM.TO": "DPM METALS INC",
+  "ELD.TO": "ELDORADO GOLD CORPORATION",
+  "EFN.TO": "ELEMENT FLEET MANAGEMENT CORP",
+  "EMA.TO": "EMERA INCORPORATED",
+  "EMP-A.TO": "EMPIRE COMPANY LIMITED",
+  "ENB.TO": "ENBRIDGE INC",
+  "EDR.TO": "ENDEAVOUR SILVER CORP.",
+  "EFR.TO": "ENERGY FUELS INC.",
+  "EQB.TO": "EQB INC",
+  "EFX.TO": "ENERFLEX LTD",
+  "EQX.TO": "EQUINOX GOLD CORP",
+  "ERO.TO": "ERO COPPER CORP",
+  "EIF.TO": "EXCHANGE INCOME CORPORATION",
+  "FFH.TO": "FAIRFAX FINANCIAL HOLDINGS LTD.",
+  "FTT.TO": "FINNING INTL",
+  "FCR-UN.TO": "FIRST CAPITAL REIT UNITS",
+  "AG.TO": "FIRST MAJESTIC SILVER CORP",
+  "FM.TO": "FIRST QUANTUM MINERALS LTD",
+  "FSV.TO": "FIRSTSERVICE CORPORATION",
+  "FTS.TO": "FORTIS INC",
+  "FVI.TO": "FORTUNA MINING CORP",
+  "FNV.TO": "FRANCO-NEVADA CORPORATION",
+  "FRU.TO": "FREEHOLD ROYALTIES LTD.",
+  "GMIN.TO": "G MINING VENTURES CORP",
+  "WN.TO": "WESTON GEORGE",
+  "GFL.TO": "GFL ENVIRONMENTAL INC",
+  "GEI.TO": "GIBSON ENERGY INC",
+  "GIL.TO": "GILDAN ACTIVEWEAR INC.",
+  "GSY.TO": "GOEASY LTD",
+  "GRT-UN.TO": "GRANITE REAL ESTATE INVESTMENT ",
+  "GWO.TO": "GREAT-WEST LIFECO INC",
+  "HR-UN.TO": "HR REAL ESTATE INV TRUST",
+  "HWX.TO": "HEADWATER EXPLORATION INC",
+  "HBM.TO": "HUDBAY MINERALS INC.",
+  "H.TO": "HYDRO ONE LIMITED",
+  "IAU.TO": "I 80 GOLD CORP",
+  "IAG.TO": "IA FINANCIAL CORPORATION",
+  "IMG.TO": "IAMGOLD CORP",
+  "IGM.TO": "IGM FINANCIAL INC.",
+  "IMO.TO": "IMPERIAL OIL",
+  "IFC.TO": "INTACT FINANCIAL CORPORATION",
+  "IPCO.TO": "INTERNATIONAL PETROLEUM CORPORA",
+  "IIP-UN.TO": "INTERRENT REAL ESTATE INVESTMEN",
+  "IVN.TO": "IVANHOE MINES LTD",
+  "JWEL.TO": "JAMIESON WELLNESS INC",
+  "KNT.TO": "K92 MINING INC",
+  "KEL.TO": "KELT EXPLORATION LTD",
+  "KEY.TO": "KEYERA CORP",
+  "KMP-UN.TO": "KILLAM APARTMENT REIT",
+  "KXS.TO": "KINAXIS INC",
+  "K.TO": "KINROSS GOLD CORP.",
+  "LIF.TO": "LABRADOR IRON ORE ROYALTY CORPO",
+  "LB.TO": "LAURENTIAN BANK",
+  "LSPD.TO": "LIGHTSPEED COMMERCE INC",
+  "LNR.TO": "LINAMAR CORP",
+  "LAC.TO": "LITHIUM AMERICAS CORP",
+  "L.TO": "LOBLAW CO",
+  "LUG.TO": "LUNDIN GOLD INC",
+  "LUN.TO": "LUNDIN MINING CORP.",
+  "MG.TO": "MAGNA INTERNATIONAL INC",
+  "MFC.TO": "MANULIFE FIN",
+  "MFI.TO": "MAPLE LEAF FOODS",
+  "MDA.TO": "MDA SPACE LTD",
+  "MX.TO": "METHANEX CORP",
+  "MRU.TO": "METRO INC",
+  "MAU.TO": "MONTAGE GOLD CORP",
+  "MTL.TO": "MULLEN GROUP LTD.",
+  "NXE.TO": "NEXGEN ENERGY LTD",
+  "NFI.TO": "NFI GROUP INC",
+  "NGEX.TO": "NGEX MINERALS LTD",
+  "NWC.TO": "THE NORTH WEST COMPANY INC",
+  "NPI.TO": "NORTHLAND POWER INC.",
+  "NG.TO": "NOVAGOLD RES INC.",
+  "NTR.TO": "NUTRIEN LTD",
+  "OGC.TO": "OCEANAGOLD CORPORATION",
+  "ONEX.TO": "ONEX CORPORATION",
+  "OTEX.TO": "OPEN TEXT CORPORATION",
+  "OLA.TO": "ORLA MINING LTD",
+  "OR.TO": "OR ROYALTIES INC",
+  "PAAS.TO": "PAN AMERICAN SILVER CORP",
+  "POU.TO": "PARAMOUNT RESOURCES LTD.",
+  "PXT.TO": "PAREX RESOURCES INC",
+  "PPL.TO": "PEMBINA PIPELINE CORPORATION",
+  "PPTA.TO": "PERPETUA RESOURCES CORP",
+  "PET.TO": "PET VALU HOLDINGS LTD",
+  "PEY.TO": "PEYTO EXPLORATION AND DVLPMNT C",
+  "POW.TO": "POWER CORPORATION OF CANADA, SV",
+  "PSK.TO": "PRAIRIESKY ROYALTY LTD",
+  "PBH.TO": "PREMIUM BRANDS HOLDINGS CORPORA",
+  "PMZ-UN.TO": "PRIMARIS REIT SERIES A",
+  "QBR-B.TO": "QUEBECOR INC CLASS B SV",
+  "RBA.TO": "RB GLOBAL INC",
+  "QSR.TO": "RESTAURANT BRANDS INTERNATIONAL",
+  "RCH.TO": "RICHELIEU HARDWARE LTD",
+  "REI-UN.TO": "RIOCAN REAL EST UN",
+  "RCI-B.TO": "ROGERS COMMUNICATIONS INC., CL.",
+  "RY.TO": "ROYAL BANK OF CANADA",
+  "RUS.TO": "RUSSEL METALS",
+  "SAP.TO": "SAPUTO INC.",
+  "SEA.TO": "SEABRIDGE GOLD INC.",
+  "SES.TO": "SECURE WASTE INFRASTRUCTURE COR",
+  "SHOP.TO": "SHOPIFY INC",
+  "SIA.TO": "SIENNA SENIOR LIVING INC",
+  "SVM.TO": "SILVERCORP METALS INC.",
+  "SKE.TO": "SKEENA RESOURCES LIMITED",
+  "SRU-UN.TO": "SMARTCENTRES REIT",
+  "SOBO.TO": "SOUTH BOW CORPORATION",
+  "SII.TO": "SPROTT INC.",
+  "SSRM.TO": "SSR MINING INC",
+  "STN.TO": "STANTEC INC",
+  "SJ.TO": "STELLA JONES INC",
+  "SCR.TO": "STRATHCONA RESOURCES LTD",
+  "SLF.TO": "SUN LIFE FINANCIAL INC.",
+  "SU.TO": "SUNCOR ENERGY INC.",
+  "SPB.TO": "SUPERIOR PLUS CORP.",
+  "TVE.TO": "TAMARACK VALLEY ENERGY LTD",
+  "TKO.TO": "TREKOR METALS LIMITED",
+  "TRP.TO": "TC ENERGY CORP.",
+  "TECK-B.TO": "TECK RESOURCES LIMITED CL B",
+  "T.TO": "TELUS CORPORATION",
+  "TVK.TO": "TERRAVEST INDUSTRIES INC",
+  "TFII.TO": "TFI INTERNATIONAL INC",
+  "TRI.TO": "THOMSON REUTERS CORPORATION",
+  "X.TO": "TMX GROUP LIMITED",
+  "TPZ.TO": "TOPAZ ENERGY CORP",
+  "TXG.TO": "TOREX GOLD RESOURCES INC",
+  "TIH.TO": "TOROMONT IND",
+  "TD.TO": "TORONTO-DOMINION BANK",
+  "TOU.TO": "TOURMALINE OIL CORP",
+  "TA.TO": "TRANSALTA CORPORATION",
+  "TCL-A.TO": "TRANSCONTINENTAL INC., CL A SV",
+  "TFPM.TO": "TRIPLE FLAG PRECIOUS METALS COR",
+  "TSU.TO": "TRISURA GROUP LTD",
+  "VET.TO": "VERMILION ENERGY INC",
+  "VITL-UN.TO": "VITAL INFRASTRUCTURE PROPERTY T",
+  "VZLA.TO": "VIZSLA SILVER CORP",
+  "WCN.TO": "WASTE CONNECTIONS INC",
+  "WDO.TO": "WESDOME GOLD MINES LTD.",
+  "WFG.TO": "WEST FRASER TIMBER CO LTD",
+  "WPM.TO": "WHEATON PRECIOUS METALS CORP",
+  "WCP.TO": "WHITECAP RESOURCES INC",
+  "WPK.TO": "WINPAK LTD",
+  "WSP.TO": "WSP GLOBAL INC",
+  "SPY": "SPDR S&P 500 ETF",
+  "XIC.TO": "iShares Core S&P/TSX Capped Composite ETF"
+ },
+ "last_price": {
+  "WYNN": 74.66000366210938,
+  "AVGO": 326.0799865722656,
+  "FLEX": 86.4800033569336,
+  "SKE.TO": 37.41999816894531,
+  "NVDA": 204.63999938964844,
+  "GMIN.TO": 37.849998474121094,
+  "MRVL": 196.39999389648438,
+  "EQX.TO": 13.550000190734863,
+  "MPWR": 1211.6300048828125,
+  "TTWO": 190.1699981689453,
+  "MU": 884.739990234375,
+  "LRCX": 239.11000061035156,
+  "DML.TO": 3.069999933242798,
+  "TXG.TO": 63.220001220703125,
+  "Q": 116.66999816894531,
+  "VST": 138.3699951171875,
+  "AMAT": 390.0899963378906,
+  "WSP.TO": 186.52000427246094,
+  "AYA.TO": 32.130001068115234,
+  "ANET": 168.86000061035156,
+  "TKO.TO": 10.300000190734863,
+  "HWM": 199.22000122070312,
+  "WPM.TO": 162.42999267578125,
+  "STX": 644.5800170898438,
+  "UAL": 104.23999786376953,
+  "GOOGL": 279.8399963378906,
+  "VRT": 232.5,
+  "GOOG": 278.2200012207031,
+  "HBM.TO": 30.43000030517578,
+  "NRG": 96.05999755859375,
+  "AGI.TO": 38.33000183105469,
+  "VNP.TO": 25.93000030517578,
+  "EFX.TO": 33.04999923706055,
+  "MAU.TO": 14.649999618530273,
+  "BYD.TO": 117.26000213623047,
+  "BDGI.TO": 83.58000183105469,
+  "NXE.TO": 11.539999961853027,
+  "CCO.TO": 107.5999984741211,
+  "KNT.TO": 25.149999618530273,
+  "EIF.TO": 111.3499984741211,
+  "EFN.TO": 21.860000610351562,
+  "OGC.TO": 33.68000030517578,
+  "SIA.TO": 19.670000076293945,
+  "TFII.TO": 130.0500030517578,
+  "SII.TO": 141.6699981689453,
+  "FTT.TO": 92.56999969482422,
+  "MDA.TO": 38.0,
+  "NGEX.TO": 20.260000228881836,
+  "ATRL.TO": 86.33000183105469,
+  "IMG.TO": 21.530000686645508,
+  "SPY": 755.719970703125,
+  "XIC.TO": 56.88999938964844
+ }
+}
