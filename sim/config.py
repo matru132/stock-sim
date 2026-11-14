@@ -7,6 +7,8 @@ Every other file reads its settings from here.
 INITIAL_CASH_CAD = 100_000.0      # every portfolio starts with this, in CAD
 FX_COST = 0.015                   # 1.5% charged on every CAD<->USD conversion
 COMMISSION_CAD = 0.0              # BMO InvestorLine: $0 per stock/ETF trade since Sept 14, 2026
+SPREAD_COST = 0.001               # 0.1% per buy and per sell: the bid-ask spread (added 2026-11-14,
+                                  # applies from the 2026-11-20 run onward)
 
 # --- Ranking rules ---
 TOP_N = 100                       # size of the weekly ranked list
@@ -34,6 +36,11 @@ STRATEGIES = [
     {"id": "CA-1W",  "name": "Canada only · weekly",        "universe": "ca",  "every_weeks": 1},
     {"id": "CA-2W",  "name": "Canada only · every 2 weeks", "universe": "ca",  "every_weeks": 2},
     {"id": "CA-4W",  "name": "Canada only · every 4 weeks", "universe": "ca",  "every_weeks": 4},
+    # Added 2026-11-14, start at the next run: same rules, but at most SECTOR_CAP
+    # stocks from any one sector (6 of 30 = 20%). Lower-ranked stocks from other
+    # sectors fill the freed places.
+    {"id": "MIX-2W-SC", "name": "US + Canada · every 2 weeks · sector cap", "universe": "mix", "every_weeks": 2, "sector_cap": 6},
+    {"id": "CA-2W-SC",  "name": "Canada only · every 2 weeks · sector cap", "universe": "ca",  "every_weeks": 2, "sector_cap": 6},
 ]
 
 # Buy-and-hold: bought once on Day 0, never sold. Dividends are reinvested.
@@ -43,6 +50,9 @@ BENCHMARKS = [
     {"id": "BENCH",   "name": "Benchmark · 50% S&P 500 + 50% TSX", "weights": {"SPY": 0.5, "XIC.TO": 0.5}, "reference": False},
     {"id": "REF-SPX", "name": "Reference · S&P 500 only",          "weights": {"SPY": 1.0},                 "reference": True},
     {"id": "REF-TSX", "name": "Reference · TSX only",              "weights": {"XIC.TO": 1.0},              "reference": True},
+    # Added 2026-11-14: a single low-cost all-in-one global stock ETF (CAD-listed,
+    # so no currency fee). "What if I just bought one ETF and did nothing?"
+    {"id": "REF-XEQT", "name": "Reference · Global equity ETF (XEQT)", "weights": {"XEQT.TO": 1.0},     "reference": True},
 ]
 
 # --- Safety ---

@@ -13,7 +13,11 @@ class FakeProvider:
         self.us = [f"US{i:03d}" for i in range(n_us)]
         self.ca = [f"CA{i:03d}.TO" for i in range(n_ca)]
         self.dates = pd.bdate_range(start, periods=days)
-        tickers = self.us + self.ca + ["SPY", "XIC.TO"]
+        tickers = self.us + self.ca + ["SPY", "XIC.TO", "XEQT.TO"]
+        # Sectors are lopsided on purpose (a third are "Mining") so the sector cap matters.
+        others = ["Tech", "Energy", "Banks", "Industrials", "Utilities", "Retail", "Health"]
+        self.sector = {t: ("Mining" if i % 3 == 0 else others[i % len(others)])
+                       for i, t in enumerate(self.us + self.ca)}
         rets = rng.normal(0.0004, 0.018, size=(days, len(tickers)))
         px = 50 * np.exp(np.cumsum(rets, axis=0)) * rng.uniform(0.5, 4, len(tickers))
         self.closes = pd.DataFrame(px, index=self.dates, columns=tickers)
@@ -43,7 +47,7 @@ class FakeProvider:
                 "n_analysts": int(r.integers(3, 40)),
                 "target_mean": float(last.get(t, 50) * r.uniform(0.85, 1.6)),
                 "market_cap": float(r.uniform(5e8, 5e11)),
-                "sector": "Test",
+                "sector": self.sector.get(t),
             })
         return pd.DataFrame(rows)
 

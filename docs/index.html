@@ -17,6 +17,7 @@
   --s1: #2a78d6;   /* weekly        */
   --s2: #eb6834;   /* every 2 weeks */
   --s3: #1baf7a;   /* every 4 weeks */
+  --s4: #8a5cd1;   /* sector-cap test */
   --bench: #6f6e69;
   --ref: #a9a8a2;
   --good: #0c7a0c;
@@ -28,7 +29,7 @@
     color-scheme: dark;
     --bg: #121211; --surface: #1a1a19; --border: #2e2e2c; --grid: #262624;
     --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e88;
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #9d76e0;
     --bench: #b5b4ad; --ref: #6f6e69; --good: #4cc24c; --bad: #e66767; --chip: #262624;
   }
 }
@@ -36,7 +37,7 @@
   color-scheme: dark;
   --bg: #121211; --surface: #1a1a19; --border: #2e2e2c; --grid: #262624;
   --text: #f0efec; --text-2: #c3c2b7; --muted: #8f8e88;
-  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #9d76e0;
   --bench: #b5b4ad; --ref: #6f6e69; --good: #4cc24c; --bad: #e66767; --chip: #262624;
 }
 * { box-sizing: border-box; }
@@ -100,29 +101,32 @@ details summary { cursor: pointer; color: var(--text-2); font-size: 13px; margin
 <main>
   <header>
     <h1>Analyst Picks — Paper Trading Experiment</h1>
-    <p>Seven hypothetical $100,000 CAD portfolios following analyst buy ratings. No real money.</p>
+    <p>Hypothetical $100,000 CAD portfolios following analyst buy ratings, compared with simply holding the index. No real money.</p>
     <div class="meta" id="meta"></div>
   </header>
 
   <section>
     <h2>Return since start</h2>
-    <p class="sub">Each line is a portfolio's gain or loss since Day 0, after currency-conversion costs. Grey dashed lines never trade.</p>
+    <p class="sub">Each line is a portfolio's gain or loss since Day 0, after currency-conversion and trading costs. Grey dashed lines never trade.</p>
     <div class="grid2">
       <div class="card"><h3>US + Canada</h3><div class="legend" id="lg-mix"></div><div class="chart" id="ch-mix"></div></div>
       <div class="card"><h3>Canada only</h3><div class="legend" id="lg-ca"></div><div class="chart" id="ch-ca"></div></div>
     </div>
+    <div class="card" id="late-card" style="margin-top:16px" hidden><h3>Sector-cap test</h3>
+      <p class="sub" id="late-sub" style="margin:2px 0 0"></p>
+      <div class="legend" id="lg-late"></div><div class="chart" id="ch-late"></div></div>
     <details><summary>Show weekly values as a table</summary><div class="scroll" id="hist-table"></div></details>
   </section>
 
   <section>
     <h2>Leaderboard</h2>
-    <p class="sub">Current value of every portfolio. "vs benchmark" compares with the 50% S&amp;P 500 / 50% TSX portfolio that never trades.</p>
+    <p class="sub">Current value of every portfolio. "vs benchmark" compares with the 50% S&amp;P 500 / 50% TSX portfolio that never trades, over the same period (portfolios added later are compared from their own start date).</p>
     <div class="card scroll"><table id="board"></table></div>
   </section>
 
   <section>
     <h2>Holdings</h2>
-    <p class="sub">What a portfolio owns right now. A holding whose current rank is outside the top 30 will be sold at that portfolio's next rebalance.</p>
+    <p class="sub">What a portfolio owns right now. A holding flagged "to sell" is no longer among the stocks this portfolio would pick today and will be sold at its next rebalance.</p>
     <div class="controls"><select id="pf-select" aria-label="Portfolio"></select><span class="chip" id="pf-info"></span></div>
     <div class="card scroll"><table id="holdings"></table></div>
   </section>
@@ -143,13 +147,14 @@ details summary { cursor: pointer; color: var(--text-2); font-size: 13px; margin
     <div class="card scroll"><table id="trades"></table></div>
   </section>
 
-  <p class="note">Educational simulation only — not investment advice. Prices are Friday closing prices from Yahoo Finance; trades are assumed to happen at those prices with $0 commission and a 1.5% fee on every CAD↔USD conversion.</p>
+  <p class="note">Educational simulation only — not investment advice. Prices are Friday closing prices from Yahoo Finance; trades are assumed to happen at those prices with $0 commission, a 1.5% fee on every CAD↔USD conversion and, from Nov 20, 2026, a 0.1% bid-ask spread cost on every buy and sell.</p>
 </main>
 
 <div class="tip" id="tip"></div>
 
 <script>
 const COLORS = { 1: "--s1", 2: "--s2", 4: "--s3" };
+const histMap = p => Object.fromEntries(p.history);
 const FREQ = { 1: "Weekly", 2: "Every 2 weeks", 4: "Every 4 weeks" };
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const $ = id => document.getElementById(id);
@@ -177,8 +182,30 @@ function render() {
   const mix = seriesFor("MIX", ["BENCH", "REF-SPX"]);
   const ca = seriesFor("CA", ["REF-TSX"]);
   legend($("lg-mix"), mix); legend($("lg-ca"), ca);
-  lineChart($("ch-mix"), mix); lineChart($("ch-ca"), ca);
-  window.addEventListener("resize", () => { lineChart($("ch-mix"), mix); lineChart($("ch-ca"), ca); });
+  const charts = [[$("ch-mix"), mix], [$("ch-ca"), ca]];
+
+  // Portfolios added after Day 0 get their own chart. Everything in it is measured
+  // from that later start date, so old and new portfolios are compared fairly.
+  const late = DATA.portfolios.filter(p => p.start_date && p.start_date !== DATA.start_date);
+  if (late.length) {
+    const since = late.map(p => p.start_date).sort()[0];
+    const pick = (id, color, label, dash) => P[id] && ({ p: P[id], color: css(color), label, dash, since,
+      base: P[id].start_date === since ? INITIAL : histMap(P[id])[since] });
+    const lateSeries = [
+      pick("MIX-2W", "--s1", "US + Canada · every 2 weeks", false),
+      pick("MIX-2W-SC", "--s2", "US + Canada · sector cap", false),
+      pick("CA-2W", "--s3", "Canada · every 2 weeks", false),
+      pick("CA-2W-SC", "--s4", "Canada · sector cap", false),
+      pick("BENCH", "--bench", "50% S&P 500 + 50% TSX", true),
+      pick("REF-XEQT", "--ref", "Global equity ETF (XEQT)", true),
+    ].filter(Boolean);
+    $("late-card").hidden = false;
+    $("late-sub").textContent = `All lines measured from ${fmtDate(since)}, when the sector-cap portfolios and the XEQT reference started with $100,000 each.`;
+    legend($("lg-late"), lateSeries);
+    charts.push([$("ch-late"), lateSeries]);
+  }
+  const drawAll = () => charts.forEach(([b, s]) => lineChart(b, s));
+  drawAll(); window.addEventListener("resize", drawAll);
 
   histTable(); board(P); holdingsSection(); rankingSection("mix");
   $("tab-mix").onclick = () => rankingSection("mix");
@@ -199,9 +226,12 @@ function legend(box, series) {
 function lineChart(box, series) {
   box.textContent = "";
   const W = Math.max(box.clientWidth, 280), H = 260, m = { t: 10, r: 14, b: 26, l: 46 };
-  const dates = series[0].p.history.map(h => h[0]);
-  const ret = s => s.p.history.map(h => h[1] / INITIAL - 1);
-  const all = series.flatMap(ret).concat([0]);
+  const since = series[0].since || "";
+  const dates = [...new Set(series.flatMap(s => s.p.history.map(h => h[0])))].filter(d => d >= since).sort();
+  series.forEach(s => { s.map = histMap(s.p); s.b = s.base || INITIAL; });
+  const val = (s, d) => s.map[d] == null ? null : s.map[d];
+  const ret = s => dates.map(d => val(s, d) == null ? null : val(s, d) / s.b - 1);
+  const all = series.flatMap(ret).filter(v => v != null).concat([0]);
   let lo = Math.min(...all), hi = Math.max(...all);
   const pad = Math.max((hi - lo) * 0.12, 0.005); lo -= pad; hi += pad;
   const step = niceStep((hi - lo) / 5);
@@ -228,8 +258,11 @@ function lineChart(box, series) {
   // draw benchmarks first so strategies sit on top
   [...series].reverse().forEach(s => {
     const r = ret(s);
-    if (n > 1) svg.append(svgEl("path", { d: r.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1)).join(""), fill: "none", stroke: s.color, "stroke-width": 2, "stroke-dasharray": s.dash ? "5 4" : "", "stroke-linejoin": "round", "stroke-linecap": "round" }));
-    svg.append(svgEl("circle", { cx: x(n - 1), cy: y(r[n - 1]), r: 3.5, fill: s.color, stroke: css("--surface"), "stroke-width": 2 }));
+    const d = r.map((v, i) => v == null ? "" : ((i && r[i - 1] != null) ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1)).join("");
+    const last = r.length - 1;
+    if (r[last] == null) return;
+    if (n > 1) svg.append(svgEl("path", { d, fill: "none", stroke: s.color, "stroke-width": 2, "stroke-dasharray": s.dash ? "5 4" : "", "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    svg.append(svgEl("circle", { cx: x(last), cy: y(r[last]), r: 3.5, fill: s.color, stroke: css("--surface"), "stroke-width": 2 }));
   });
   const cross = svgEl("line", { y1: m.t, y2: H - m.b, stroke: css("--muted"), "stroke-width": 1, visibility: "hidden" });
   svg.append(cross);
@@ -242,10 +275,10 @@ function lineChart(box, series) {
     cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("visibility", "visible");
     tip.textContent = "";
     tip.append(el("div", { class: "d" }, fmtDate(dates[i])));
-    series.map(s => ({ s, v: s.p.history[i][1] })).sort((a, b) => b.v - a.v).forEach(({ s, v }) => {
+    series.map(s => ({ s, v: val(s, dates[i]) })).filter(o => o.v != null).sort((a, b) => b.v / b.s.b - a.v / a.s.b).forEach(({ s, v }) => {
       const row = el("div", { class: "r" });
       const k = el("span", { class: "key" + (s.dash ? " dash" : "") }); k.style.borderTopColor = s.color;
-      row.append(k, el("b", {}, pct(v / INITIAL - 1)), el("em", {}, s.label + " · " + money(v)));
+      row.append(k, el("b", {}, pct(v / s.b - 1)), el("em", {}, s.label + " · " + money(v)));
       tip.append(row);
     });
     const br = box.getBoundingClientRect();
@@ -276,31 +309,37 @@ function signed(v, d) { return cell(pct(v, d), "n " + (v > 0 ? "pos" : v < 0 ? "
 
 function histTable() {
   const ps = DATA.portfolios, t = el("table");
-  const dates = ps[0].history.map(h => h[0]);
-  table(t, [["Week of"], ...ps.map(p => [p.id, true])], dates.map((d, i) => {
-    const r = el("tr"); r.append(cell(fmtDate(d))); ps.forEach(p => r.append(cell(money(p.history[i] ? p.history[i][1] : null), "n"))); return r;
+  const maps = ps.map(histMap);
+  const dates = [...new Set(ps.flatMap(p => p.history.map(h => h[0])))].sort();
+  table(t, [["Week of"], ...ps.map(p => [p.id, true])], dates.map(d => {
+    const r = el("tr"); r.append(cell(fmtDate(d))); maps.forEach(mp => r.append(cell(money(mp[d] ?? null), "n"))); return r;
   }));
   $("hist-table").append(t);
 }
 
 function board(P) {
-  const bench = P["BENCH"].return_pct;
-  const groups = [["US + Canada", ["MIX-1W", "MIX-2W", "MIX-4W"]], ["Canada only", ["CA-1W", "CA-2W", "CA-4W"]], ["Never trade", ["BENCH", "REF-SPX", "REF-TSX"]]];
+  const lateStart = DATA.portfolios.filter(p => p.start_date && p.start_date !== DATA.start_date).map(p => p.start_date).sort()[0];
+  const groups = [["US + Canada", ["MIX-1W", "MIX-2W", "MIX-4W"]], ["Canada only", ["CA-1W", "CA-2W", "CA-4W"]],
+    ["Sector cap: max 6 stocks per sector" + (lateStart ? ` (since ${fmtDate(lateStart)})` : ""), ["MIX-2W-SC", "CA-2W-SC"]],
+    ["Never trade", ["BENCH", "REF-SPX", "REF-TSX", "REF-XEQT"]]]
+    .map(([g, ids]) => [g, ids.filter(id => P[id])]).filter(([g, ids]) => ids.length);
   const rows = [];
   groups.forEach(([g, ids]) => {
     const gr = el("tr", { class: "group" }); gr.append(el("td", { colspan: 8 }, g)); rows.push(gr);
     ids.forEach(id => {
       const p = P[id], r = el("tr");
       const nameTd = el("td"); const k = el("span", { class: "key" + (p.kind === "benchmark" ? " dash" : "") });
-      k.style.borderTopColor = css(p.kind === "benchmark" ? (id === "BENCH" ? "--bench" : "--ref") : COLORS[p.every_weeks]);
-      nameTd.append(k, document.createTextNode(p.name.replace(/^(Benchmark|Reference) · /, "")));
-      r.append(nameTd, cell(money(p.value), "n"), signed(p.return_pct), id === "BENCH" ? cell("—", "n") : signed(p.return_pct - bench),
-        cell(money(p.fx_fees), "n"), cell(String(p.n_trades), "n"), cell(money(p.cash_cad + p.cash_usd * DATA.fx), "n"),
+      k.style.borderTopColor = css(p.kind === "benchmark" ? (id === "BENCH" ? "--bench" : "--ref") : p.sector_cap ? "--s4" : COLORS[p.every_weeks]);
+      nameTd.append(k, document.createTextNode(p.name.replace(/^(Benchmark|Reference) · /, "").replace(/ · sector cap$/, "")));
+      if (p.start_date && p.start_date !== DATA.start_date) nameTd.append(el("span", { class: "flag", style: "color:var(--muted);margin-left:6px" }, "since " + fmtDate(p.start_date)));
+      const vs = (id === "BENCH" || p.bench_same_period == null) ? cell("—", "n") : signed(p.return_pct - p.bench_same_period);
+      r.append(nameTd, cell(money(p.value), "n"), signed(p.return_pct), vs,
+        cell(money((p.fx_fees || 0) + (p.spread_fees || 0)), "n"), cell(String(p.n_trades), "n"), cell(money(p.cash_cad + p.cash_usd * DATA.fx), "n"),
         cell(p.next_rebalance ? fmtDate(p.next_rebalance) : "Never", "n"));
       rows.push(r);
     });
   });
-  table($("board"), [["Portfolio"], ["Value", 1], ["Return", 1], ["vs benchmark", 1], ["FX fees paid", 1], ["Trades", 1], ["Cash", 1], ["Next rebalance", 1]], rows);
+  table($("board"), [["Portfolio"], ["Value", 1], ["Return", 1], ["vs benchmark", 1], ["Fees paid", 1], ["Trades", 1], ["Cash", 1], ["Next rebalance", 1]], rows);
 }
 
 function holdingsSection() {
@@ -313,7 +352,7 @@ function holdingsSection() {
       p.holdings.map(h => {
         const r = el("tr"); const rk = el("td", { class: "n" });
         if (p.kind === "benchmark") rk.textContent = "—";
-        else if (h.rank && h.rank <= DATA.settings.n_hold) rk.textContent = "#" + h.rank;
+        else if (h.in_target ?? (h.rank && h.rank <= DATA.settings.n_hold)) rk.textContent = h.rank ? "#" + h.rank : "—";
         else rk.append(el("span", { class: "flag" }, h.rank ? `#${h.rank} · to sell` : "unranked · to sell"));
         r.append(cell(h.ticker), cell(h.name), cell(money(h.value_cad), "n"), cell((h.weight * 100).toFixed(1) + "%", "n"), signed(h.gain_pct, 1), rk);
         return r;

@@ -94,6 +94,7 @@ def run(provider=None, today=None):
     names.update(dict(zip(fundamentals["ticker"], fundamentals["name"])))
     names.setdefault("SPY", "SPDR S&P 500 ETF")
     names.setdefault("XIC.TO", "iShares Core S&P/TSX Capped Composite ETF")
+    names.setdefault("XEQT.TO", "iShares Core Equity ETF Portfolio")
     ccys = {t: _ccy(t) for t in prices}
     print(f"[analyst] {len(ranking)} stocks passed the filters "
           f"({(ranking['market'] == 'CA').sum()} Canadian)")
@@ -101,23 +102,33 @@ def run(provider=None, today=None):
     # --- 3. TRADE ---
     log = []
     if state is None:
-        state = {"start_date": as_of_s, "portfolios":
-                 [trader.new_strategy(s) for s in C.STRATEGIES]
-                 + [trader.new_benchmark(b) for b in C.BENCHMARKS]}
-        new_benchmarks = True
+        state = {"start_date": as_of_s, "portfolios": []}
     else:
-        new_benchmarks = False
         div_window = divs.loc[(divs.index > pd.Timestamp(state["last_date"])) & (divs.index <= as_of)]
         per_share = div_window.sum().to_dict() if len(div_window) else {}
         for p in state["portfolios"]:
             trader.credit_dividends(p, per_share, as_of_s, log)
 
+    # Portfolios added to config.py later start today with their own $100,000.
+    existing = {p["id"] for p in state["portfolios"]}
+    for s in C.STRATEGIES:
+        if s["id"] not in existing:
+            state["portfolios"].append(trader.new_strategy(s, week, as_of_s))
+    for b in C.BENCHMARKS:
+        if b["id"] not in existing:
+            state["portfolios"].append(trader.new_benchmark(b, week, as_of_s))
+    for p in state["portfolios"]:                     # older state files lack these fields
+        p.setdefault("start_week", 0)
+        p.setdefault("start_date", state["start_date"])
+        p["fees"].setdefault("spread", 0.0)
+
     for p in state["portfolios"]:
         if p["kind"] == "strategy":
-            if week % p["every_weeks"] == 0:
-                targets = [t for t in analyst.targets_for(ranking, p["universe"]) if t in prices]
+            if (week - p["start_week"]) % p["every_weeks"] == 0:
+                targets = [t for t in analyst.targets_for(ranking, p["universe"], p.get("sector_cap"))
+                           if t in prices]
                 trader.rebalance(p, targets, prices, ccys, fx, as_of_s, log)
-        elif new_benchmarks:
+        elif not p["positions"]:
             trader.setup_benchmark(p, prices, ccys, fx, as_of_s, log)
         else:
             trader.reinvest_benchmark_cash(p, prices, ccys, fx, as_of_s, log)
@@ -130,7 +141,8 @@ def run(provider=None, today=None):
         total, _ = analyst.portfolio_report(p, prices, fx, ranking, names)
         rows.append({"date": as_of_s, "week": week, "portfolio": p["id"], "value_cad": round(total, 2),
                      "cash_cad": round(p["cash"]["CAD"] + p["cash"]["USD"] * fx, 2),
-                     "fx_fees_cad": round(p["fees"]["fx"], 2), "n_trades": p["n_trades"],
+                     "fx_fees_cad": round(p["fees"]["fx"], 2),
+                     "spread_fees_cad": round(p["fees"]["spread"], 2), "n_trades": p["n_trades"],
                      "n_positions": len(p["positions"])})
     _append_csv(HISTORY_FILE, rows)
     _append_csv(TRADES_FILE, log)
@@ -144,13 +156,18 @@ def _append_csv(path, rows):
     if not rows:
         return
     df = pd.DataFrame(rows)
-    df.to_csv(path, mode="a", header=not path.exists(), index=False)
+    if path.exists():                      # rewrite in full so new columns line up with old rows
+        df = pd.concat([pd.read_csv(path), df], ignore_index=True)
+    df.to_csv(path, index=False)
 
 
 def write_dashboard_data(state, prices, fx, ranking, names, week):
     hist = pd.read_csv(HISTORY_FILE)
     trades = pd.read_csv(TRADES_FILE) if TRADES_FILE.exists() else pd.DataFrame()
     start = pd.Timestamp(state["start_date"])
+    bench_hist = dict(zip(hist.loc[hist["portfolio"] == "BENCH", "date"],
+                          hist.loc[hist["portfolio"] == "BENCH", "value_cad"]))
+    bench_now = bench_hist.get(state["last_date"])
     out_p = []
     for p in state["portfolios"]:
         total, holdings = analyst.portfolio_report(p, prices, fx, ranking, names)
@@ -158,17 +175,30 @@ def write_dashboard_data(state, prices, fx, ranking, names, week):
         nxt = None
         if p["kind"] == "strategy":
             k = week + 1
-            while k % p["every_weeks"]:
+            while (k - p["start_week"]) % p["every_weeks"]:
                 k += 1
             nxt = (start + timedelta(days=7 * k)).strftime("%Y-%m-%d")
+            keep = set(analyst.targets_for(ranking, p["universe"], p.get("sector_cap")))
+            for hd in holdings:
+                hd["in_target"] = hd["ticker"] in keep
+        # The 50/50 benchmark's return over the same period as this portfolio,
+        # so portfolios that started later are compared fairly.
+        b0 = bench_hist.get(p["start_date"])
+        bench_same = (bench_now / b0 - 1) if (b0 and bench_now) else None
+        if p["start_date"] == state["start_date"] and bench_now:
+            bench_same = bench_now / C.INITIAL_CASH_CAD - 1
         out_p.append({
             "id": p["id"], "name": p["name"], "kind": p["kind"],
             "universe": p.get("universe"), "every_weeks": p.get("every_weeks"),
+            "sector_cap": p.get("sector_cap"),
             "reference": p.get("reference", False),
+            "start_date": p["start_date"], "start_week": p["start_week"],
             "value": round(total, 2),
             "return_pct": round(total / C.INITIAL_CASH_CAD - 1, 5),
+            "bench_same_period": round(bench_same, 5) if bench_same is not None else None,
             "cash_cad": round(p["cash"]["CAD"], 2), "cash_usd": round(p["cash"]["USD"], 2),
-            "fx_fees": round(p["fees"]["fx"], 2), "n_trades": p["n_trades"],
+            "fx_fees": round(p["fees"]["fx"], 2), "spread_fees": round(p["fees"]["spread"], 2),
+            "n_trades": p["n_trades"],
             "last_rebalance": p.get("last_rebalance"), "next_rebalance": nxt,
             "history": [[d, v] for d, v in zip(h["date"], h["value_cad"])],
             "holdings": holdings,
@@ -184,8 +214,8 @@ def write_dashboard_data(state, prices, fx, ranking, names, week):
 
     data = {
         "as_of": state["last_date"], "start_date": state["start_date"], "week": week,
-        "fx": round(fx, 4), "settings": {"fx_cost": C.FX_COST, "n_hold": C.N_HOLD,
-                                         "initial": C.INITIAL_CASH_CAD},
+        "fx": round(fx, 4), "settings": {"fx_cost": C.FX_COST, "spread_cost": C.SPREAD_COST,
+                                         "n_hold": C.N_HOLD, "initial": C.INITIAL_CASH_CAD},
         "portfolios": out_p, "top_mix": rows(top), "top_ca": rows(ca),
         "recent_trades": trades.tail(300).fillna("").to_dict("records") if len(trades) else [],
     }

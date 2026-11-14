@@ -56,10 +56,22 @@ def rank(fundamentals: pd.DataFrame, universe: pd.DataFrame, last_close: pd.Seri
     return df[cols]
 
 
-def targets_for(ranking: pd.DataFrame, universe: str):
-    """The tickers a strategy should hold right now, best-ranked first."""
+def targets_for(ranking: pd.DataFrame, universe: str, sector_cap=None):
+    """The tickers a strategy should hold right now, best-ranked first.
+    With sector_cap, walk down the ranking and skip a stock once its sector
+    already has `sector_cap` picks."""
     r = ranking if universe == "mix" else ranking[ranking["market"] == "CA"]
-    return list(r["ticker"].head(C.N_HOLD))
+    if not sector_cap:
+        return list(r["ticker"].head(C.N_HOLD))
+    picks, count = [], {}
+    sectors = r["sector"].fillna("Unknown") if "sector" in r else pd.Series("Unknown", index=r.index)
+    for t, s in zip(r["ticker"], sectors):
+        if count.get(s, 0) < sector_cap:
+            picks.append(t)
+            count[s] = count.get(s, 0) + 1
+            if len(picks) == C.N_HOLD:
+                break
+    return picks
 
 
 def price_cad(ticker, prices, fx, ccy):

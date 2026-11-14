@@ -1,6 +1,6 @@
 # Analyst Picks — Paper Trading Experiment
 
-A forward-running simulation: 7 hypothetical portfolios of $100,000 CAD that follow
+A forward-running simulation: hypothetical portfolios of $100,000 CAD that follow
 analyst buy recommendations, compared against simply buying the index and doing
 nothing. **No real money, no brokerage account involved.** Educational only.
 
@@ -18,9 +18,11 @@ nothing. **No real money, no brokerage account involved.** Educational only.
 | Prices | Friday closing prices (Thursday when Friday is a holiday) |
 | Commission | $0 (BMO InvestorLine, since Sept 14, 2026) |
 | Currency | Everything reported in CAD. Two cash balances (CAD and USD); 1.5% fee on every conversion |
+| Spread | 0.1% on every buy and every sell (bid-ask spread), from the 2026-11-20 run onward |
+| Sector cap (SC portfolios only) | At most 6 of the 30 stocks (20%) from any one sector; lower-ranked stocks from other sectors fill the gap |
 | Dividends | Strategy portfolios: added to cash, invested at the next rebalance. Index portfolios: reinvested weekly |
 
-### The 7 portfolios (+ 2 reference lines)
+### The portfolios
 
 | ID | Universe | Rebalances |
 |---|---|---|
@@ -32,6 +34,12 @@ nothing. **No real money, no brokerage account involved.** Educational only.
 | CA-4W | Canada only | every 4 weeks |
 | BENCH | 50% S&P 500 (SPY) + 50% TSX (XIC.TO) | never — bought once on Day 0 |
 | REF-SPX / REF-TSX | 100% SPY / 100% XIC.TO | never — shown for reference |
+| MIX-2W-SC | US + Canada, sector cap | every 2 weeks, **started 2026-11-20** |
+| CA-2W-SC | Canada only, sector cap | every 2 weeks, **started 2026-11-20** |
+| REF-XEQT | 100% XEQT.TO (global all-equity ETF) | never — **started 2026-11-20** |
+
+Portfolios added later start with their own $100,000 on their start date. The dashboard
+compares them with the others measured from that same date, so the comparison stays fair.
 
 All rules live in `sim/config.py`. Change a number there and every part of the system follows.
 

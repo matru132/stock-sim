@@ -12,18 +12,26 @@ from . import config as C
 from .agent_analyst import portfolio_value, price_cad
 
 
-def new_strategy(spec):
-    return {**spec, "kind": "strategy",
+def new_strategy(spec, week=0, date=None):
+    return {**spec, "kind": "strategy", "start_week": week, "start_date": date,
             "cash": {"CAD": C.INITIAL_CASH_CAD, "USD": 0.0},
-            "positions": {}, "fees": {"fx": 0.0, "commission": 0.0},
+            "positions": {}, "fees": {"fx": 0.0, "commission": 0.0, "spread": 0.0},
             "n_trades": 0, "last_rebalance": None}
 
 
-def new_benchmark(spec):
-    return {**spec, "kind": "benchmark",
+def new_benchmark(spec, week=0, date=None):
+    return {**spec, "kind": "benchmark", "start_week": week, "start_date": date,
             "cash": {"CAD": C.INITIAL_CASH_CAD, "USD": 0.0},
-            "positions": {}, "fees": {"fx": 0.0, "commission": 0.0},
+            "positions": {}, "fees": {"fx": 0.0, "commission": 0.0, "spread": 0.0},
             "n_trades": 0, "last_rebalance": None}
+
+
+def _spread(p, value_native, ccy, fx):
+    """Bid-ask spread cost: buying pays slightly above the close, selling gets
+    slightly below. Returns the cost in the trade's currency."""
+    cost = value_native * C.SPREAD_COST
+    p["fees"]["spread"] = p["fees"].get("spread", 0.0) + cost * (fx if ccy == "USD" else 1.0)
+    return cost
 
 
 def _log(log, date, p, action, ticker, shares, price, ccy, value_cad, fee_cad=0.0):
@@ -63,29 +71,33 @@ def buy(p, t, ccy, price, amount_native, fx, date, log):
     amount_native = min(amount_native, p["cash"][ccy])
     if amount_native < 1.0:                                   # nothing meaningful left to spend
         return
-    shares = amount_native / price                            # fractional shares allowed
+    spread = _spread(p, amount_native, ccy, fx)
+    shares = (amount_native - spread) / price                 # fractional shares allowed
     p["cash"][ccy] -= amount_native
     pos = p["positions"].setdefault(t, {"shares": 0.0, "ccy": ccy, "cost_cad": 0.0})
     pos["shares"] += shares
-    cost_cad = amount_native * (fx if ccy == "USD" else 1.0)
+    k = fx if ccy == "USD" else 1.0
+    cost_cad = amount_native * k
     pos["cost_cad"] += cost_cad
     p["n_trades"] += 1
     _commission(p)
-    _log(log, date, p, "BUY", t, shares, price, ccy, cost_cad)
+    _log(log, date, p, "BUY", t, shares, price, ccy, cost_cad, spread * k)
 
 
 def sell(p, t, shares, price, fx, date, log):
     pos = p["positions"][t]
     shares = min(shares, pos["shares"])
-    proceeds = shares * price
+    gross = shares * price
+    spread = _spread(p, gross, pos["ccy"], fx)
+    proceeds = gross - spread
     frac = shares / pos["shares"] if pos["shares"] else 1.0
     pos["cost_cad"] *= (1 - frac)
     pos["shares"] -= shares
     p["cash"][pos["ccy"]] += proceeds                         # proceeds stay in their own currency
     p["n_trades"] += 1
     _commission(p)
-    _log(log, date, p, "SELL", t, shares, price, pos["ccy"],
-         proceeds * (fx if pos["ccy"] == "USD" else 1.0))
+    k = fx if pos["ccy"] == "USD" else 1.0
+    _log(log, date, p, "SELL", t, shares, price, pos["ccy"], proceeds * k, spread * k)
     if pos["shares"] <= 1e-9:
         del p["positions"][t]
 
@@ -137,10 +149,11 @@ def rebalance(p, targets, prices, ccys, fx, date, log):
 
     # 2. Work out equal-weight target size, net of the FX cost the trades will need.
     total = portfolio_value(p, prices, fx)
-    target_val = total / C.N_HOLD
+    n = max(len(targets), 1)            # normally 30; fewer only if a sector cap runs out of stocks
+    target_val = total / n
     for _ in range(3):
         plan = _plan(p, targets, prices, ccys, fx, target_val)
-        target_val = (total - _estimated_fx_fee(p, plan, ccys, fx)) / C.N_HOLD
+        target_val = (total - _estimated_fx_fee(p, plan, ccys, fx)) / n
     plan = _plan(p, targets, prices, ccys, fx, target_val)
 
     # 3. Trim overweight positions first (frees cash), then buy in rank order.
