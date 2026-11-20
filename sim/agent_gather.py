@@ -100,6 +100,29 @@ class YahooProvider:
             time.sleep(0.25)                                       # be polite to Yahoo
         return pd.DataFrame(rows)
 
+    def get_insider(self, tickers):
+        """All insider transactions Yahoo lists for each ticker (raw, unfiltered).
+        Returns (DataFrame with a 'ticker' column, share of tickers that answered)."""
+        import yfinance as yf
+        frames, answered = [], 0
+        for i, t in enumerate(tickers):
+            df = None
+            for attempt in range(2):
+                try:
+                    df = yf.Ticker(t).insider_transactions
+                    break
+                except Exception:
+                    time.sleep(2 * (attempt + 1))
+            if df is not None:
+                answered += 1
+                if len(df):
+                    frames.append(df.drop(columns=["URL"], errors="ignore").assign(ticker=t))
+            if i % 100 == 0:
+                print(f"[gather] insider data {i}/{len(tickers)}")
+            time.sleep(0.2)
+        raw = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+        return raw, answered / max(len(tickers), 1)
+
     def get_prices(self, tickers, start, end):
         """Daily closes and dividends. Returns (closes, dividends) DataFrames,
         indexed by date, one column per ticker."""

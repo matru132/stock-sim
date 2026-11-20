@@ -20,6 +20,7 @@ nothing. **No real money, no brokerage account involved.** Educational only.
 | Currency | Everything reported in CAD. Two cash balances (CAD and USD); 1.5% fee on every conversion |
 | Spread | 0.1% on every buy and every sell (bid-ask spread), from the 2026-11-20 run onward |
 | Sector cap (SC portfolios only) | At most 6 of the 30 stocks (20%) from any one sector; lower-ranked stocks from other sectors fill the gap |
+| Insider buying (INS portfolios only) | Hold up to 30 companies whose executives/directors bought on the open market in the last 90 days (≥ $25,000; employee plans, option exercises and 10% holders excluded), ranked by number of distinct buyers then amount. Each stock = 1/30 of the portfolio; empty slots go to the index (XIC for Canada, 50% SPY + 50% XIC for US + Canada). If Yahoo's insider data fails that week, they hold instead of trading |
 | Dividends | Strategy portfolios: added to cash, invested at the next rebalance. Index portfolios: reinvested weekly |
 
 ### The portfolios
@@ -37,6 +38,8 @@ nothing. **No real money, no brokerage account involved.** Educational only.
 | MIX-2W-SC | US + Canada, sector cap | every 2 weeks, **started 2026-11-20** |
 | CA-2W-SC | Canada only, sector cap | every 2 weeks, **started 2026-11-20** |
 | REF-XEQT | 100% XEQT.TO (global all-equity ETF) | never — **started 2026-11-20** |
+| MIX-INS | US + Canada, insider buying | every 2 weeks, **started 2026-11-20** |
+| CA-INS | Canada only, insider buying | every 2 weeks, **started 2026-11-20** |
 
 Portfolios added later start with their own $100,000 on their start date. The dashboard
 compares them with the others measured from that same date, so the comparison stays fair.
@@ -48,7 +51,7 @@ All rules live in `sim/config.py`. Change a number there and every part of the s
 ```
 Every Saturday morning (GitHub Actions)
    │
-   ├─ Agent 1 · Gatherer   sim/agent_gather.py   index members, analyst data, prices
+   ├─ Agent 1 · Gatherer   sim/agent_gather.py   index members, analyst data, insider trades, prices
    ├─ Agent 2 · Analyst    sim/agent_analyst.py  scores and ranks; reports portfolio status
    ├─ Agent 3 · Trader     sim/agent_trader.py   sells, buys, converts currency, logs trades
    └─ Orchestrator         sim/run_weekly.py     runs them in order, saves everything
@@ -57,6 +60,7 @@ Every Saturday morning (GitHub Actions)
                                 ├─ data/history.csv      weekly value of every portfolio
                                 ├─ data/trades.csv       every transaction ever made
                                 ├─ data/rankings/*.csv   each week's full ranking
+                                ├─ data/insider/*.csv    each week's qualifying insider purchases
                                 └─ docs/data.json  ──►   docs/index.html (the dashboard)
 ```
 

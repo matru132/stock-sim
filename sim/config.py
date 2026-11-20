@@ -41,7 +41,20 @@ STRATEGIES = [
     # sectors fill the freed places.
     {"id": "MIX-2W-SC", "name": "US + Canada · every 2 weeks · sector cap", "universe": "mix", "every_weeks": 2, "sector_cap": 6},
     {"id": "CA-2W-SC",  "name": "Canada only · every 2 weeks · sector cap", "universe": "ca",  "every_weeks": 2, "sector_cap": 6},
+    # Added 2026-11-14, start at the next run: hold the companies whose own
+    # executives/directors bought shares on the open market recently (up to 30,
+    # each 1/30 of the portfolio). Empty slots are filled with the index ("fill").
+    {"id": "MIX-INS", "name": "US + Canada · insider buying", "universe": "mix", "every_weeks": 2,
+     "signal": "insider", "fill": {"SPY": 0.5, "XIC.TO": 0.5}},
+    {"id": "CA-INS",  "name": "Canada only · insider buying", "universe": "ca",  "every_weeks": 2,
+     "signal": "insider", "fill": {"XIC.TO": 1.0}},
 ]
+
+# --- Insider-buying rules ---
+INSIDER_WINDOW_DAYS = 90          # purchases made in the last 90 days count
+INSIDER_MIN_VALUE = 25_000        # ignore token purchases below this (in the trade's currency)
+INSIDER_MIN_COVERAGE = 0.5        # if Yahoo answers for less than half the stocks, the insider
+                                  # portfolios skip that rebalance instead of trading on bad data
 
 # Buy-and-hold: bought once on Day 0, never sold. Dividends are reinvested.
 # SPY tracks the S&P 500 (in USD, so it pays the FX cost once);

@@ -99,6 +99,21 @@ def run(provider=None, today=None):
     print(f"[analyst] {len(ranking)} stocks passed the filters "
           f"({(ranking['market'] == 'CA').sum()} Canadian)")
 
+    # Insider buying (only fetched if some portfolio uses it). None = data unusable this week.
+    insider = None
+    if any(s.get("signal") == "insider" for s in C.STRATEGIES) and hasattr(provider, "get_insider"):
+        raw, coverage = provider.get_insider(list(universe["ticker"]))
+        if coverage >= C.INSIDER_MIN_COVERAGE:
+            buys = analyst.filter_insider_buys(raw, as_of)
+            (DATA / "insider").mkdir(exist_ok=True)
+            buys.to_csv(DATA / "insider" / f"{as_of_s}.csv", index=False)
+            insider = {w: analyst.insider_picks(buys, universe, prices, w, fx) for w in ("mix", "ca")}
+            print(f"[analyst] insider buying: {len(insider['mix'])} companies "
+                  f"({len(insider['ca'])} Canadian) from {len(buys)} qualifying purchases")
+        else:
+            print(f"[analyst] insider data answered for only {coverage:.0%} of stocks — "
+                  "insider portfolios will not trade this week")
+
     # --- 3. TRADE ---
     log = []
     if state is None:
@@ -124,7 +139,18 @@ def run(provider=None, today=None):
 
     for p in state["portfolios"]:
         if p["kind"] == "strategy":
-            if (week - p["start_week"]) % p["every_weeks"] == 0:
+            if (week - p["start_week"]) % p["every_weeks"] != 0:
+                continue
+            if p.get("signal") == "insider":
+                if insider is None:
+                    print(f"[trader] {p['id']}: no usable insider data, holding as is")
+                    continue
+                w = analyst.insider_weights(insider[p["universe"]], p["fill"])
+                w = {t: v for t, v in w.items() if t in prices}
+                tot = sum(w.values())
+                w = {t: v / tot for t, v in w.items()}
+                trader.rebalance(p, list(w), prices, ccys, fx, as_of_s, log, weights=w)
+            else:
                 targets = [t for t in analyst.targets_for(ranking, p["universe"], p.get("sector_cap"))
                            if t in prices]
                 trader.rebalance(p, targets, prices, ccys, fx, as_of_s, log)
@@ -147,7 +173,7 @@ def run(provider=None, today=None):
     _append_csv(HISTORY_FILE, rows)
     _append_csv(TRADES_FILE, log)
     STATE_FILE.write_text(json.dumps(state, indent=1))
-    write_dashboard_data(state, prices, fx, ranking, names, week)
+    write_dashboard_data(state, prices, fx, ranking, names, week, insider)
     print(f"[run] Week {week} ({as_of_s}) done — {len(log)} transactions logged.")
     return state
 
@@ -161,7 +187,7 @@ def _append_csv(path, rows):
     df.to_csv(path, index=False)
 
 
-def write_dashboard_data(state, prices, fx, ranking, names, week):
+def write_dashboard_data(state, prices, fx, ranking, names, week, insider=None):
     hist = pd.read_csv(HISTORY_FILE)
     trades = pd.read_csv(TRADES_FILE) if TRADES_FILE.exists() else pd.DataFrame()
     start = pd.Timestamp(state["start_date"])
@@ -178,7 +204,17 @@ def write_dashboard_data(state, prices, fx, ranking, names, week):
             while (k - p["start_week"]) % p["every_weeks"]:
                 k += 1
             nxt = (start + timedelta(days=7 * k)).strftime("%Y-%m-%d")
-            keep = set(analyst.targets_for(ranking, p["universe"], p.get("sector_cap")))
+            if p.get("signal") == "insider":
+                if insider is None:                      # no fresh data: nothing is flagged to sell
+                    keep = {hd["ticker"] for hd in holdings}
+                else:
+                    picks = insider[p["universe"]]
+                    keep = set(analyst.insider_weights(picks, p["fill"]))
+                    irank = dict(zip(picks["ticker"], picks["rank"]))
+                for hd in holdings:
+                    hd["rank"] = None if insider is None else irank.get(hd["ticker"])
+            else:
+                keep = set(analyst.targets_for(ranking, p["universe"], p.get("sector_cap")))
             for hd in holdings:
                 hd["in_target"] = hd["ticker"] in keep
         # The 50/50 benchmark's return over the same period as this portfolio,
@@ -190,7 +226,7 @@ def write_dashboard_data(state, prices, fx, ranking, names, week):
         out_p.append({
             "id": p["id"], "name": p["name"], "kind": p["kind"],
             "universe": p.get("universe"), "every_weeks": p.get("every_weeks"),
-            "sector_cap": p.get("sector_cap"),
+            "sector_cap": p.get("sector_cap"), "signal": p.get("signal"),
             "reference": p.get("reference", False),
             "start_date": p["start_date"], "start_week": p["start_week"],
             "value": round(total, 2),
@@ -217,6 +253,12 @@ def write_dashboard_data(state, prices, fx, ranking, names, week):
         "fx": round(fx, 4), "settings": {"fx_cost": C.FX_COST, "spread_cost": C.SPREAD_COST,
                                          "n_hold": C.N_HOLD, "initial": C.INITIAL_CASH_CAD},
         "portfolios": out_p, "top_mix": rows(top), "top_ca": rows(ca),
+        "insider": None if insider is None else {
+            w: [{"rank": int(r["rank"]), "ticker": r["ticker"], "name": names.get(r["ticker"], r["ticker"]),
+                 "market": r["market"], "buyers": int(r["buyers"]), "n_buys": int(r["n_buys"]),
+                 "value_cad": round(float(r["value_cad"]), 0), "last_buy": r["last_buy"]}
+                for _, r in insider[w].head(C.N_HOLD).iterrows()]
+            for w in ("mix", "ca")},
         "recent_trades": trades.tail(300).fillna("").to_dict("records") if len(trades) else [],
     }
     (DOCS / "data.json").write_text(json.dumps(_clean(data)))

@@ -80,7 +80,7 @@ td.n, th.n { text-align: right; }
 tr.group td { font-weight: 600; color: var(--text-2); background: transparent; padding-top: 14px; font-size: 13px; }
 tbody tr:hover td { background: var(--chip); }
 .scroll { overflow-x: auto; }
-#board td:first-child, #holdings td:first-child, #ranking td:nth-child(2) { white-space: nowrap; }
+#board td:first-child, #holdings td:first-child, #ranking td:nth-child(2), #ins-table td:nth-child(2) { white-space: nowrap; }
 .pos { color: var(--good); } .neg { color: var(--bad); }
 .key { display: inline-block; width: 14px; height: 0; border-top: 2.5px solid; vertical-align: middle; margin-right: 8px; }
 .key.dash { border-top-style: dashed; }
@@ -115,6 +115,9 @@ details summary { cursor: pointer; color: var(--text-2); font-size: 13px; margin
     <div class="card" id="late-card" style="margin-top:16px" hidden><h3>Sector-cap test</h3>
       <p class="sub" id="late-sub" style="margin:2px 0 0"></p>
       <div class="legend" id="lg-late"></div><div class="chart" id="ch-late"></div></div>
+    <div class="card" id="ins-card" style="margin-top:16px" hidden><h3>Insider-buying test</h3>
+      <p class="sub" id="ins-sub" style="margin:2px 0 0"></p>
+      <div class="legend" id="lg-ins"></div><div class="chart" id="ch-ins"></div></div>
     <details><summary>Show weekly values as a table</summary><div class="scroll" id="hist-table"></div></details>
   </section>
 
@@ -139,6 +142,16 @@ details summary { cursor: pointer; color: var(--text-2); font-size: 13px; margin
       <button id="tab-ca" aria-pressed="false">Canada only</button>
     </div>
     <div class="card scroll"><table id="ranking"></table></div>
+  </section>
+
+  <section id="ins-section" hidden>
+    <h2>Recent insider buying</h2>
+    <p class="sub">Companies whose executives or directors bought shares on the open market in the last 90 days (purchases of $25,000 or more; automatic employee plans, option exercises and 10% holders are excluded). Ranked by number of different insiders buying, then total amount. The insider-buying portfolios hold up to 30 of these.</p>
+    <div class="controls">
+      <button id="ins-mix" aria-pressed="true">US + Canada</button>
+      <button id="ins-ca" aria-pressed="false">Canada only</button>
+    </div>
+    <div class="card scroll"><table id="ins-table"></table></div>
   </section>
 
   <section>
@@ -186,28 +199,41 @@ function render() {
 
   // Portfolios added after Day 0 get their own chart. Everything in it is measured
   // from that later start date, so old and new portfolios are compared fairly.
-  const late = DATA.portfolios.filter(p => p.start_date && p.start_date !== DATA.start_date);
-  if (late.length) {
-    const since = late.map(p => p.start_date).sort()[0];
-    const pick = (id, color, label, dash) => P[id] && ({ p: P[id], color: css(color), label, dash, since,
-      base: P[id].start_date === since ? INITIAL : histMap(P[id])[since] });
-    const lateSeries = [
-      pick("MIX-2W", "--s1", "US + Canada · every 2 weeks", false),
-      pick("MIX-2W-SC", "--s2", "US + Canada · sector cap", false),
-      pick("CA-2W", "--s3", "Canada · every 2 weeks", false),
-      pick("CA-2W-SC", "--s4", "Canada · sector cap", false),
-      pick("BENCH", "--bench", "50% S&P 500 + 50% TSX", true),
-      pick("REF-XEQT", "--ref", "Global equity ETF (XEQT)", true),
-    ].filter(Boolean);
-    $("late-card").hidden = false;
-    $("late-sub").textContent = `All lines measured from ${fmtDate(since)}, when the sector-cap portfolios and the XEQT reference started with $100,000 each.`;
-    legend($("lg-late"), lateSeries);
-    charts.push([$("ch-late"), lateSeries]);
-  }
+  const addLateChart = (key, newIds, lines, what) => {
+    const starts = newIds.filter(id => P[id] && P[id].start_date && P[id].start_date !== DATA.start_date).map(id => P[id].start_date);
+    if (!starts.length) return;
+    const since = starts.sort()[0];
+    const series = lines.map(([id, color, label, dash]) => P[id] && histMap(P[id])[since] != null && ({ p: P[id], color: css(color), label, dash, since,
+      base: P[id].start_date === since ? INITIAL : histMap(P[id])[since] })).filter(Boolean);
+    $(key + "-card").hidden = false;
+    $(key + "-sub").textContent = `All lines measured from ${fmtDate(since)}, when ${what} started with $100,000 each.`;
+    legend($("lg-" + key), series);
+    charts.push([$("ch-" + key), series]);
+  };
+  addLateChart("late", ["MIX-2W-SC", "CA-2W-SC", "REF-XEQT"], [
+      ["MIX-2W", "--s1", "US + Canada · every 2 weeks", false],
+      ["MIX-2W-SC", "--s2", "US + Canada · sector cap", false],
+      ["CA-2W", "--s3", "Canada · every 2 weeks", false],
+      ["CA-2W-SC", "--s4", "Canada · sector cap", false],
+      ["BENCH", "--bench", "50% S&P 500 + 50% TSX", true],
+      ["REF-XEQT", "--ref", "Global equity ETF (XEQT)", true]],
+    "the sector-cap portfolios and the XEQT reference");
+  addLateChart("ins", ["MIX-INS", "CA-INS"], [
+      ["MIX-INS", "--s1", "US + Canada · insider buying", false],
+      ["CA-INS", "--s3", "Canada · insider buying", false],
+      ["BENCH", "--bench", "50% S&P 500 + 50% TSX", true],
+      ["REF-TSX", "--ref", "TSX only", true]],
+    "the two insider-buying portfolios");
   const drawAll = () => charts.forEach(([b, s]) => lineChart(b, s));
   drawAll(); window.addEventListener("resize", drawAll);
 
   histTable(); board(P); holdingsSection(); rankingSection("mix");
+  if (DATA.insider) {
+    $("ins-section").hidden = false;
+    insiderSection("mix");
+    $("ins-mix").onclick = () => insiderSection("mix");
+    $("ins-ca").onclick = () => insiderSection("ca");
+  }
   $("tab-mix").onclick = () => rankingSection("mix");
   $("tab-ca").onclick = () => rankingSection("ca");
 }
@@ -321,6 +347,7 @@ function board(P) {
   const lateStart = DATA.portfolios.filter(p => p.start_date && p.start_date !== DATA.start_date).map(p => p.start_date).sort()[0];
   const groups = [["US + Canada", ["MIX-1W", "MIX-2W", "MIX-4W"]], ["Canada only", ["CA-1W", "CA-2W", "CA-4W"]],
     ["Sector cap: max 6 stocks per sector" + (lateStart ? ` (since ${fmtDate(lateStart)})` : ""), ["MIX-2W-SC", "CA-2W-SC"]],
+    ["Insider buying: stocks insiders bought + index for empty slots", ["MIX-INS", "CA-INS"]],
     ["Never trade", ["BENCH", "REF-SPX", "REF-TSX", "REF-XEQT"]]]
     .map(([g, ids]) => [g, ids.filter(id => P[id])]).filter(([g, ids]) => ids.length);
   const rows = [];
@@ -329,8 +356,8 @@ function board(P) {
     ids.forEach(id => {
       const p = P[id], r = el("tr");
       const nameTd = el("td"); const k = el("span", { class: "key" + (p.kind === "benchmark" ? " dash" : "") });
-      k.style.borderTopColor = css(p.kind === "benchmark" ? (id === "BENCH" ? "--bench" : "--ref") : p.sector_cap ? "--s4" : COLORS[p.every_weeks]);
-      nameTd.append(k, document.createTextNode(p.name.replace(/^(Benchmark|Reference) · /, "").replace(/ · sector cap$/, "")));
+      k.style.borderTopColor = css(p.kind === "benchmark" ? (id === "BENCH" ? "--bench" : "--ref") : p.sector_cap ? "--s4" : p.signal === "insider" ? (p.universe === "ca" ? "--s3" : "--s1") : COLORS[p.every_weeks]);
+      nameTd.append(k, document.createTextNode(p.name.replace(/^(Benchmark|Reference) · /, "").replace(/ · (sector cap|insider buying)$/, "")));
       if (p.start_date && p.start_date !== DATA.start_date) nameTd.append(el("span", { class: "flag", style: "color:var(--muted);margin-left:6px" }, "since " + fmtDate(p.start_date)));
       const vs = (id === "BENCH" || p.bench_same_period == null) ? cell("—", "n") : signed(p.return_pct - p.bench_same_period);
       r.append(nameTd, cell(money(p.value), "n"), signed(p.return_pct), vs,
@@ -366,6 +393,14 @@ function holdingsSection() {
           cell(t.fee_cad ? money(t.fee_cad) : "—", "n")); return r; }));
   };
   s.onchange = draw; draw();
+}
+
+function insiderSection(which) {
+  $("ins-mix").setAttribute("aria-pressed", which === "mix"); $("ins-ca").setAttribute("aria-pressed", which === "ca");
+  table($("ins-table"), [["#", 1], ["Ticker"], ["Company"], ["Market"], ["Insiders buying", 1], ["Purchases", 1], ["Total bought (CAD)", 1], ["Last buy", 1]],
+    DATA.insider[which].map(s => { const r = el("tr");
+      r.append(cell(String(s.rank), "n"), cell(s.ticker), cell(s.name), cell(s.market), cell(String(s.buyers), "n"),
+        cell(String(s.n_buys), "n"), cell(money(s.value_cad), "n"), cell(fmtDate(s.last_buy), "n")); return r; }));
 }
 
 function rankingSection(which) {

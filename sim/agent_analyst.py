@@ -6,6 +6,8 @@ Turns the raw facts into decisions-ready information:
                            and the current rank of every holding
 No buying or selling happens here.
 """
+import re
+
 import pandas as pd
 
 from . import config as C
@@ -72,6 +74,78 @@ def targets_for(ranking: pd.DataFrame, universe: str, sector_cap=None):
             if len(picks) == C.N_HOLD:
                 break
     return picks
+
+
+# Discretionary open-market purchases only. Yahoo's wording:
+#   US (SEC Form 4, code P):  "Purchase at price 249.81 per share."
+#   Canada (SEDI):            "Acquisition in the public market at price 7.55 per share."
+# Not counted: automatic employee plans ("Acquisition under a purchase/ownership
+# plan"), option exercises, grants, gifts, private placements, and sales.
+_OPEN_MARKET_BUY = re.compile(r"^\s*(?:purchase at price|acquisition in the public market)", re.I)
+_NOT_AN_INSIDER = re.compile(r"10%|beneficial owner|^issuer$", re.I)   # "Director of Issuer" is fine; the issuer itself is not
+_PRICE = re.compile(r"price\s+([\d,]*\.?\d+)", re.I)
+
+
+def filter_insider_buys(raw: pd.DataFrame, as_of, window_days=None, min_value=None):
+    """Keep only meaningful purchases by executives/directors in the window.
+    Returns columns: ticker, date, insider, position, value."""
+    window_days = window_days or C.INSIDER_WINDOW_DAYS
+    min_value = C.INSIDER_MIN_VALUE if min_value is None else min_value
+    cols = ["ticker", "date", "insider", "position", "value"]
+    if raw is None or raw.empty:
+        return pd.DataFrame(columns=cols)
+    df = raw.copy()
+    text = df.get("Text", pd.Series("", index=df.index)).fillna("").astype(str)
+    pos = df.get("Position", pd.Series("", index=df.index)).fillna("").astype(str).str.strip()
+    df["date"] = pd.to_datetime(df.get("Start Date"), errors="coerce")
+    shares = pd.to_numeric(df.get("Shares"), errors="coerce")
+    value = pd.to_numeric(df.get("Value"), errors="coerce")
+    px = pd.to_numeric(text.str.extract(_PRICE)[0].str.replace(",", ""), errors="coerce")
+    df["value"] = value.where(value > 0, shares * px)          # some rows only give price x shares
+    as_of = pd.Timestamp(as_of)
+    keep = (text.str.contains(_OPEN_MARKET_BUY)
+            & ~pos.str.contains(_NOT_AN_INSIDER)
+            & df["date"].between(as_of - pd.Timedelta(days=window_days), as_of)
+            & (df["value"] >= min_value))
+    out = df[keep].assign(insider=df.get("Insider", "").astype(str).str.strip(), position=pos)
+    return out[cols].reset_index(drop=True)
+
+
+def insider_picks(buys: pd.DataFrame, universe: pd.DataFrame, prices: dict, which: str, fx: float):
+    """Rank companies by insider buying: most distinct buyers first, then most CAD
+    bought. Returns a DataFrame (best first) with rank, ticker, market, buyers,
+    value_cad, last_buy, n_buys. Only stocks in our universe with a price count."""
+    cols = ["rank", "ticker", "market", "buyers", "value_cad", "last_buy", "n_buys"]
+    if buys is None or buys.empty:
+        return pd.DataFrame(columns=cols)
+    b = buys.merge(universe, on="ticker", how="inner")
+    if which == "ca":
+        b = b[b["market"] == "CA"]
+    b = b[b["ticker"].isin([t for t in prices])]
+    if b.empty:
+        return pd.DataFrame(columns=cols)
+    b = b.assign(value_cad=b["value"] * b["market"].map({"US": fx, "CA": 1.0}))
+    g = (b.groupby(["ticker", "market"])
+          .agg(buyers=("insider", "nunique"), value_cad=("value_cad", "sum"),
+               last_buy=("date", "max"), n_buys=("insider", "size"))
+          .reset_index()
+          .sort_values(["buyers", "value_cad"], ascending=[False, False])
+          .reset_index(drop=True))
+    g["rank"] = g.index + 1
+    g["last_buy"] = g["last_buy"].dt.strftime("%Y-%m-%d")
+    return g[cols]
+
+
+def insider_weights(picks: pd.DataFrame, fill: dict):
+    """Each picked stock gets 1/N_HOLD of the portfolio; whatever is left goes to
+    the fill ETFs. Returns {ticker: weight} summing to 1."""
+    stocks = list(picks["ticker"].head(C.N_HOLD))
+    w = {t: 1.0 / C.N_HOLD for t in stocks}
+    rest = 1.0 - len(stocks) / C.N_HOLD
+    if rest > 1e-9:
+        for t, share in fill.items():
+            w[t] = w.get(t, 0.0) + rest * share
+    return w
 
 
 def price_cad(ticker, prices, fx, ccy):

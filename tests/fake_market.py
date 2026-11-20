@@ -51,6 +51,34 @@ class FakeProvider:
             })
         return pd.DataFrame(rows)
 
+    insider_coverage = 1.0          # tests can lower this to simulate Yahoo not answering
+
+    def get_insider(self, tickers):
+        """Yahoo-style insider rows: real open-market buys mixed with things the
+        filter must ignore (employee plans, 10% holders, tiny buys, sales)."""
+        r = np.random.default_rng(55)
+        rows = []
+        for i, t in enumerate(tickers):
+            ca = t.endswith(".TO")
+            buy_txt = ("Acquisition in the public market at price 20.00 per share." if ca
+                       else "Purchase at price 20.00 per share.")
+            for k in range(int(r.integers(0, 4)) if i % 4 == 0 else 0):     # a quarter of stocks get buys
+                rows.append({"ticker": t, "Shares": 5000, "Value": float(r.uniform(30_000, 900_000)),
+                             "Text": buy_txt, "Insider": f"Exec {k}", "Position": "Director",
+                             "Transaction": "", "Start Date": self.dates[int(r.integers(0, len(self.dates)))]})
+            d = self.dates[int(r.integers(0, len(self.dates)))]
+            rows += [
+                {"ticker": t, "Shares": 900, "Value": 18_000.0, "Text": "Acquisition under a purchase/ownership plan at price 20.00 per share.",
+                 "Insider": "Payroll Plan", "Position": "Senior Officer of Issuer", "Transaction": "", "Start Date": d},
+                {"ticker": t, "Shares": 90_000, "Value": 1_800_000.0, "Text": buy_txt,
+                 "Insider": "Big Fund", "Position": "10% Security Holder of Issuer", "Transaction": "", "Start Date": d},
+                {"ticker": t, "Shares": 100, "Value": 2_000.0, "Text": buy_txt,
+                 "Insider": "Token Buyer", "Position": "Director", "Transaction": "", "Start Date": d},
+                {"ticker": t, "Shares": 50_000, "Value": 1_000_000.0, "Text": "Sale at price 20.00 per share.",
+                 "Insider": "Seller", "Position": "Officer", "Transaction": "", "Start Date": d},
+            ]
+        return pd.DataFrame(rows), self.insider_coverage
+
     def get_prices(self, tickers, start, end):
         m = (self.dates >= pd.Timestamp(start)) & (self.dates < pd.Timestamp(end))
         cols = [t for t in tickers if t in self.closes]

@@ -112,17 +112,18 @@ def credit_dividends(p, divs_per_share, date, log):
             _log(log, date, p, "DIVIDEND", t, pos["shares"], d, pos["ccy"], 0.0)
 
 
-def _plan(p, targets, prices, ccys, fx, target_val):
-    """Return {ticker: change in CAD value} — positive = buy, negative = sell."""
+def _plan(p, targets, prices, ccys, fx, target_vals):
+    """target_vals: {ticker: target CAD value}. Return {ticker: change in CAD value}
+    — positive = buy, negative = sell."""
     plan = {}
     for t in targets:
-        cur = 0.0
-        if t in p["positions"]:
-            cur = p["positions"][t]["shares"] * price_cad(t, prices, fx, ccys[t])
+        tv = target_vals[t]
         if t not in p["positions"]:
-            plan[t] = target_val
-        elif abs(cur - target_val) > C.DRIFT_BAND * target_val:
-            plan[t] = target_val - cur
+            plan[t] = tv
+            continue
+        cur = p["positions"][t]["shares"] * price_cad(t, prices, fx, ccys[t])
+        if abs(cur - tv) > C.DRIFT_BAND * tv:
+            plan[t] = tv - cur
     return plan
 
 
@@ -140,21 +141,22 @@ def _estimated_fx_fee(p, plan, ccys, fx):
     return (short_usd + short_cad) * C.FX_COST / (1 - C.FX_COST)
 
 
-def rebalance(p, targets, prices, ccys, fx, date, log):
-    """targets: ordered list of tickers (best first) this portfolio should hold."""
+def rebalance(p, targets, prices, ccys, fx, date, log, weights=None):
+    """targets: ordered list of tickers (best first) this portfolio should hold.
+    weights: optional {ticker: share of the portfolio}; default is equal weight."""
+    weights = weights or {t: 1.0 / max(len(targets), 1) for t in targets}
     # 1. Sell everything that fell out of the target list.
     for t in list(p["positions"]):
         if t not in targets:
             sell(p, t, p["positions"][t]["shares"], prices[t], fx, date, log)
 
-    # 2. Work out equal-weight target size, net of the FX cost the trades will need.
+    # 2. Work out each target's size, net of the FX cost the trades will need.
     total = portfolio_value(p, prices, fx)
-    n = max(len(targets), 1)            # normally 30; fewer only if a sector cap runs out of stocks
-    target_val = total / n
+    investable = total
     for _ in range(3):
-        plan = _plan(p, targets, prices, ccys, fx, target_val)
-        target_val = (total - _estimated_fx_fee(p, plan, ccys, fx)) / n
-    plan = _plan(p, targets, prices, ccys, fx, target_val)
+        plan = _plan(p, targets, prices, ccys, fx, {t: investable * weights[t] for t in targets})
+        investable = total - _estimated_fx_fee(p, plan, ccys, fx)
+    plan = _plan(p, targets, prices, ccys, fx, {t: investable * weights[t] for t in targets})
 
     # 3. Trim overweight positions first (frees cash), then buy in rank order.
     for t, dv in plan.items():

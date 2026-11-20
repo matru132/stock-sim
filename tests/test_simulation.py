@@ -59,7 +59,7 @@ def test_full_run():
 
     for p in state["portfolios"]:
         assert p["cash"]["CAD"] >= -0.01 and p["cash"]["USD"] >= -0.01, p["id"]
-        if p["kind"] == "strategy":
+        if p["kind"] == "strategy" and p.get("signal") != "insider":   # insider ones hold stocks + index
             assert len(p["positions"]) <= C.N_HOLD
             assert len(p["positions"]) >= C.N_HOLD - 1, (p["id"], len(p["positions"]))
 
@@ -226,6 +226,93 @@ def test_sector_cap_selection():
     assert picks[6:12] == [f"T{i}" for i in range(20, 26)]   # then the best 6 banks
     assert len(picks) == 18                                   # 6 gold + 6 bank + 6 unknown
     assert targets_for(r, "ca") == [f"T{i}" for i in range(30)]
+
+
+def test_insider_filter_keeps_only_real_open_market_buys():
+    from sim.agent_analyst import filter_insider_buys
+    raw = pd.DataFrame([
+        ["AAA", 1000, 250_000, "Purchase at price 250.00 per share.", "CEO A", "Chief Executive Officer", "2026-11-01"],
+        ["BBB.TO", 3000, None, "Acquisition in the public market at price 15.50 per share.", "Dir B", "Director of Issuer", "2026-10-20"],
+        ["CCC.TO", 900, 18_000, "Acquisition under a purchase/ownership plan at price 20.00 per share.", "Plan", "Senior Officer of Issuer", "2026-11-02"],
+        ["DDD", 90_000, 9e6, "Purchase at price 100.00 per share.", "Fund", "Beneficial Owner of more than 10% of a Class of Security", "2026-11-02"],
+        ["EEE", 100, 2_000, "Purchase at price 20.00 per share.", "Dir E", "Director", "2026-11-02"],
+        ["FFF", 5000, 500_000, "Sale at price 100.00 per share.", "Dir F", "Director", "2026-11-02"],
+        ["GGG", 5000, 500_000, "Purchase at price 100.00 per share.", "Dir G", "Director", "2026-05-01"],
+        ["HHH", 5000, 500_000, "Conversion of Exercise of derivative security at price 10.00 per share.", "Dir H", "Officer", "2026-11-02"],
+    ], columns=["ticker", "Shares", "Value", "Text", "Insider", "Position", "Start Date"])
+    b = filter_insider_buys(raw, "2026-11-13")
+    assert sorted(b["ticker"]) == ["AAA", "BBB.TO"], b
+    assert approx(float(b.loc[b["ticker"] == "BBB.TO", "value"].iloc[0]), 3000 * 15.5)   # value from price x shares
+
+
+def test_insider_ranking_and_weights():
+    from sim.agent_analyst import insider_picks, insider_weights
+    buys = pd.DataFrame({"ticker": ["A", "A", "B", "C.TO", "C.TO", "C.TO", "Z"],
+                         "date": pd.to_datetime(["2026-11-01"] * 7),
+                         "insider": ["x", "y", "x", "x", "y", "z", "q"],
+                         "position": "Director", "value": [50e3, 50e3, 900e3, 30e3, 30e3, 30e3, 1e6]})
+    uni = pd.DataFrame({"ticker": ["A", "B", "C.TO"], "market": ["US", "US", "CA"]})   # Z not in universe
+    prices = {"A": 1, "B": 1, "C.TO": 1}
+    mix = insider_picks(buys, uni, prices, "mix", fx=1.4)
+    assert list(mix["ticker"]) == ["C.TO", "A", "B"]          # 3 buyers, then 2, then 1
+    assert list(insider_picks(buys, uni, prices, "ca", fx=1.4)["ticker"]) == ["C.TO"]
+    w = insider_weights(mix, {"SPY": 0.5, "XIC.TO": 0.5})
+    assert approx(sum(w.values()), 1.0)
+    assert approx(w["A"], 1 / C.N_HOLD) and approx(w["SPY"], (1 - 3 / C.N_HOLD) / 2)
+    empty = insider_weights(mix.head(0), {"XIC.TO": 1.0})
+    assert empty == {"XIC.TO": 1.0}                           # no insider buying -> 100% index
+
+
+@in_tempdir
+def test_insider_portfolios_run():
+    prov = FakeProvider()
+    for d in FRIDAYS[:5]:
+        run_weekly.run(provider=prov, today=d + pd.Timedelta(days=1))
+    state = json.loads(Path("data/state.json").read_text())
+    by = {p["id"]: p for p in state["portfolios"]}
+    data = json.loads(Path("docs/data.json").read_text())
+    picks = data["insider"]
+    assert picks and picks["mix"] and picks["ca"]
+    allowed_ca = {r["ticker"] for r in picks["ca"]}
+    for pid, fill in (("MIX-INS", {"SPY", "XIC.TO"}), ("CA-INS", {"XIC.TO"})):
+        p = by[pid]
+        stocks = set(p["positions"]) - fill
+        assert len(stocks) <= C.N_HOLD
+        assert fill & set(p["positions"]) or len(stocks) == C.N_HOLD    # empty slots sit in the index
+        assert p["cash"]["CAD"] >= -0.01 and p["cash"]["USD"] >= -0.01
+    # Week 4 is a rebalance week, so every stock held is one of this week's insider picks
+    assert set(by["CA-INS"]["positions"]) - {"XIC.TO"} <= allowed_ca
+    assert set(by["MIX-INS"]["positions"]) - {"SPY", "XIC.TO"} <= {r["ticker"] for r in picks["mix"]}
+    # Weights: each stock about 1/30, the index takes the rest
+    vals = {q["id"]: q for q in data["portfolios"]}["MIX-INS"]["holdings"]
+    n_stocks = sum(1 for x in vals if x["ticker"] not in ("SPY", "XIC.TO"))
+    idx_w = sum(x["weight"] for x in vals if x["ticker"] in ("SPY", "XIC.TO"))
+    assert abs(idx_w - (1 - n_stocks / C.N_HOLD)) < 0.02, (n_stocks, idx_w)
+    assert all(t.endswith(".TO") for t in by["CA-INS"]["positions"])
+    assert by["CA-INS"]["fees"]["fx"] == 0                                  # Canada only: no conversions
+    # Excluded rows never become picks
+    buys = pd.read_csv(sorted(Path("data/insider").glob("*.csv"))[-1])
+    assert not buys["insider"].isin(["Payroll Plan", "Big Fund", "Token Buyer", "Seller"]).any()
+    # Dashboard marks the index slots and insider picks as "keep"
+    h = {q["id"]: q for q in data["portfolios"]}["CA-INS"]["holdings"]
+    assert all(x["in_target"] for x in h)
+
+
+@in_tempdir
+def test_insider_data_outage_holds_positions():
+    prov = FakeProvider()
+    for d in FRIDAYS[:3]:
+        run_weekly.run(provider=prov, today=d + pd.Timedelta(days=1))
+    before = {p["id"]: p for p in json.loads(Path("data/state.json").read_text())["portfolios"]}
+    prov.insider_coverage = 0.1
+    for d in FRIDAYS[3:5]:
+        run_weekly.run(provider=prov, today=d + pd.Timedelta(days=1))
+    after = {p["id"]: p for p in json.loads(Path("data/state.json").read_text())["portfolios"]}
+    assert set(after["MIX-INS"]["positions"]) == set(before["MIX-INS"]["positions"])
+    assert after["MIX-INS"]["n_trades"] == before["MIX-INS"]["n_trades"]
+    assert after["MIX-2W"]["n_trades"] > before["MIX-2W"]["n_trades"]      # other portfolios keep trading
+    data = json.loads(Path("docs/data.json").read_text())
+    assert data["insider"] is None
 
 
 if __name__ == "__main__":
